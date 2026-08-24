@@ -5,6 +5,7 @@ namespace App\Filament\Resources\FinancialYears;
 use App\Filament\Resources\FinancialYears\Pages\ManageFinancialYears;
 use App\Models\FinancialYear;
 use BackedEnum;
+use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -28,7 +29,9 @@ class FinancialYearResource extends Resource
 {
     protected static ?string $model = FinancialYear::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Masters';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Calendar;
 
     public static function form(Schema $schema): Schema
     {

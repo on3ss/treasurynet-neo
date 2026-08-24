@@ -11,6 +11,7 @@ use App\Filament\Resources\Treasuries\Schemas\TreasuryInfolist;
 use App\Filament\Resources\Treasuries\Tables\TreasuriesTable;
 use App\Models\Treasury;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -22,7 +23,9 @@ class TreasuryResource extends Resource
 {
     protected static ?string $model = Treasury::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Masters';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingLibrary;
 
     public static function form(Schema $schema): Schema
     {
