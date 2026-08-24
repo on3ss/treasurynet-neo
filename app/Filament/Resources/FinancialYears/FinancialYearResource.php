@@ -46,11 +46,14 @@ class FinancialYearResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('start_date')
+                    ->label(__('Start Date'))
                     ->date()
                     ->sortable(),
                 TextColumn::make('end_date')
+                    ->label(__('End Date'))
                     ->date()
                     ->sortable(),
                 IconColumn::make('is_active')
@@ -60,14 +63,17 @@ class FinancialYearResource extends Resource
                     ->label(__('Current'))
                     ->boolean(),
                 TextColumn::make('created_at')
+                    ->label(__('Created At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('Updated At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('deleted_at')
+                    ->label(__('Deleted At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
