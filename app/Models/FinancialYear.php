@@ -4,9 +4,114 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class FinancialYear extends Model
 {
-    /** @use HasFactory<\Database\Factories\FinancialYearFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'start_date',
+        'end_date',
+        'is_active',
+        'is_current',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_active' => 'boolean',
+        'is_current' => 'boolean',
+    ];
+
+    /**
+     * Scope a query to only include active financial years.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to only include the current financial year.
+     */
+    public function scopeCurrent($query)
+    {
+        return $query->where('is_current', true);
+    }
+
+    /**
+     * Get the current financial year.
+     */
+    public static function getCurrent(): ?self
+    {
+        return static::current()->first();
+    }
+
+    /**
+     * Get the current financial year based on today's date.
+     */
+    public static function getCurrentByDate(): ?self
+    {
+        $now = Carbon::now();
+        $currentFYStart = $now->month >= 4 ? $now->year : $now->year - 1;
+        $name = $currentFYStart . '-' . ($currentFYStart + 1);
+
+        return static::where('name', $name)->first();
+    }
+
+    /**
+     * Check if this financial year is current.
+     */
+    public function isCurrent(): bool
+    {
+        return $this->is_current;
+    }
+
+    /**
+     * Check if this financial year is active.
+     */
+    public function isActive(): bool
+    {
+        return $this->is_active;
+    }
+
+    /**
+     * Get formatted date range.
+     */
+    public function getDateRangeAttribute(): string
+    {
+        /** @var Carbon $startDate */
+        $startDate = $this->start_date;
+
+        /** @var Carbon $endDate */
+        $endDate = $this->end_date;
+
+        return $startDate->format('d-m-Y') . ' to ' . $endDate->format('d-m-Y');
+    }
+
+    /**
+     * Set this financial year as current.
+     */
+    public function setAsCurrent(): bool
+    {
+        static::query()->update(['is_current' => false]);
+
+        return $this->update([
+            'is_current' => true,
+            'is_active' => true,
+        ]);
+    }
 }
