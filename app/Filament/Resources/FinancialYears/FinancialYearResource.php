@@ -13,8 +13,6 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -36,15 +34,9 @@ class FinancialYearResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                DatePicker::make('start_date')
-                    ->required(),
-                DatePicker::make('end_date')
-                    ->required(),
                 Toggle::make('is_active')
-                    ->required(),
-                Toggle::make('is_current')
+                    ->label(__('Active'))
+                    ->disabled(fn(?FinancialYear $record): bool => $record?->is_current ?? false)
                     ->required(),
             ]);
     }
@@ -62,8 +54,10 @@ class FinancialYearResource extends Resource
                     ->date()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label(__('Active'))
                     ->boolean(),
                 IconColumn::make('is_current')
+                    ->label(__('Current'))
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()

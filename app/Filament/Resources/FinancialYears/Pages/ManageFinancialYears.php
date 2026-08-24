@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\FinancialYears\Pages;
 
 use App\Filament\Resources\FinancialYears\FinancialYearResource;
-use Filament\Actions\CreateAction;
+// use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageFinancialYears extends ManageRecords
@@ -13,7 +13,7 @@ class ManageFinancialYears extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            // CreateAction::make(),
         ];
     }
 }
