@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\DDOType;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class DDO extends Model
+{
+    use SoftDeletes;
+
+    protected $table = 'ddos';
+
+    protected $fillable = [
+        'treasury_id',
+        'department_id',
+        'sequence',
+        'code',
+        'designation',
+        'type',
+        'address',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'type' => DDOType::class,
+        'is_active' => 'boolean',
+    ];
+
+    public function treasury(): BelongsTo
+    {
+        return $this->belongsTo(Treasury::class);
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+}
