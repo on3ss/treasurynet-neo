@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\DDOS\Tables;
+namespace App\Filament\Resources\Ddos\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -13,7 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class DDOSTable
+class DdosTable
 {
     public static function configure(Table $table): Table
     {

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\DDOS\Pages;
+namespace App\Filament\Resources\Ddos\Pages;
 
-use App\Filament\Resources\DDOS\DDOResource;
+use App\Filament\Resources\Ddos\DdoResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
-class ViewDDO extends ViewRecord
+class ViewDdo extends ViewRecord
 {
-    protected static string $resource = DDOResource::class;
+    protected static string $resource = DdoResource::class;
 
     protected function getHeaderActions(): array
     {

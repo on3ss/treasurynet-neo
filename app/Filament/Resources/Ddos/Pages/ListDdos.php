@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\DDOS\Pages;
+namespace App\Filament\Resources\Ddos\Pages;
 
-use App\Filament\Resources\DDOS\DDOResource;
+use App\Filament\Resources\Ddos\DdoResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
-class ListDDOS extends ListRecords
+class ListDdos extends ListRecords
 {
-    protected static string $resource = DDOResource::class;
+    protected static string $resource = DdoResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\DDOS\Schemas;
+namespace App\Filament\Resources\Ddos\Schemas;
 
-use App\Models\DDO;
+use App\Models\Ddo;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
-class DDOInfolist
+class DdoInfolist
 {
     public static function configure(Schema $schema): Schema
     {
@@ -35,7 +35,7 @@ class DDOInfolist
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn (DDO $record): bool => $record->trashed()),
+                    ->visible(fn (Ddo $record): bool => $record->trashed()),
             ]);
     }
 }

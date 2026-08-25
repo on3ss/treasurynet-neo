@@ -4,14 +4,20 @@ namespace Database\Seeders;
 
 use App\Enums\DDOType;
 use App\Models\Department;
-use App\Models\DDO;
 use App\Models\Treasury;
+use App\Models\Ddo;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
-class DDOSeeder extends Seeder
+class DdoSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         $path = database_path('seeders/data/ddos.csv');
@@ -104,7 +110,7 @@ class DDOSeeder extends Seeder
                     continue;
                 }
 
-                DDO::updateOrCreate(
+                Ddo::updateOrCreate(
                     [
                         'code' => $code,
                     ],

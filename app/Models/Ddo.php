@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Enums\DDOType;
+use App\Models\Department;
+use App\Models\Treasury;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DDO extends Model
+class Ddo extends Model
 {
     use SoftDeletes;
-
-    protected $table = 'ddos';
 
     protected $fillable = [
         'treasury_id',

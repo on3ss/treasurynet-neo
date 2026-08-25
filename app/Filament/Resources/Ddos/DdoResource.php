@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\DDOS;
+namespace App\Filament\Resources\Ddos;
 
-use App\Filament\Resources\DDOS\Pages\CreateDDO;
-use App\Filament\Resources\DDOS\Pages\EditDDO;
-use App\Filament\Resources\DDOS\Pages\ListDDOS;
-use App\Filament\Resources\DDOS\Pages\ViewDDO;
-use App\Filament\Resources\DDOS\Schemas\DDOForm;
-use App\Filament\Resources\DDOS\Schemas\DDOInfolist;
-use App\Filament\Resources\DDOS\Tables\DDOSTable;
-use App\Models\DDO;
+use App\Filament\Resources\Ddos\Pages\CreateDdo;
+use App\Filament\Resources\Ddos\Pages\EditDdo;
+use App\Filament\Resources\Ddos\Pages\ListDdos;
+use App\Filament\Resources\Ddos\Pages\ViewDdo;
+use App\Filament\Resources\Ddos\Schemas\DdoForm;
+use App\Filament\Resources\Ddos\Schemas\DdoInfolist;
+use App\Filament\Resources\Ddos\Tables\DdosTable;
+use App\Models\Ddo;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
-class DDOResource extends Resource
+class DdoResource extends Resource
 {
-    protected static ?string $model = DDO::class;
+    protected static ?string $model = Ddo::class;
 
     public static function getModelLabel(): string
     {
@@ -43,17 +43,17 @@ class DDOResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return DDOForm::configure($schema);
+        return DdoForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return DDOInfolist::configure($schema);
+        return DdoInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return DDOSTable::configure($table);
+        return DdosTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -66,10 +66,10 @@ class DDOResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListDDOS::route('/'),
-            'create' => CreateDDO::route('/create'),
-            'view' => ViewDDO::route('/{record}'),
-            'edit' => EditDDO::route('/{record}/edit'),
+            'index' => ListDdos::route('/'),
+            'create' => CreateDdo::route('/create'),
+            'view' => ViewDdo::route('/{record}'),
+            'edit' => EditDdo::route('/{record}/edit'),
         ];
     }
 

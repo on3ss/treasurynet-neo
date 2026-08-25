@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\DDOS\Schemas;
+namespace App\Filament\Resources\Ddos\Schemas;
 
 use App\Enums\DDOType;
 use Filament\Forms\Components\Select;
@@ -9,7 +9,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
-class DDOForm
+class DdoForm
 {
     public static function configure(Schema $schema): Schema
     {

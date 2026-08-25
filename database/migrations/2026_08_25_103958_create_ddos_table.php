@@ -1,8 +1,8 @@
 <?php
 
+use App\Enums\DDOType;
 use App\Models\Department;
 use App\Models\Treasury;
-use App\Enums\DDOType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
