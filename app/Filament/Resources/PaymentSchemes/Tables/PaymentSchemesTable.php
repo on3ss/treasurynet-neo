@@ -18,23 +18,6 @@ class PaymentSchemesTable
     {
         return $table
             ->columns([
-                TextColumn::make('demand_number')
-                    ->searchable(),
-                TextColumn::make('major_head')
-                    ->searchable(),
-                TextColumn::make('submajor_head')
-                    ->searchable(),
-                TextColumn::make('minor_head')
-                    ->searchable(),
-                TextColumn::make('subminor_head')
-                    ->searchable(),
-                TextColumn::make('sub_head')
-                    ->searchable(),
-                TextColumn::make('charged_or_voted')
-                    ->searchable(),
-                TextColumn::make('flag')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('code')
                     ->searchable(),
                 TextColumn::make('description')
