@@ -11,7 +11,7 @@ class DetailHeadForm
     {
         return $schema
             ->components([
-                TextInput::make('head')
+                TextInput::make('code')
                     ->required(),
                 TextInput::make('description')
                     ->required(),

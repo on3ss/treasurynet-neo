@@ -10,7 +10,7 @@ class DetailHead extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'head',
+        'code',
         'description',
         'head_type',
         'deduction_applicability',

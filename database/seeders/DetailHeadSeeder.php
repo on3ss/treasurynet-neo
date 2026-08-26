@@ -76,9 +76,9 @@ class DetailHeadSeeder extends Seeder
 
         foreach ($detailHeads as $data) {
             DetailHead::updateOrCreate(
-                ['head' => $data[0]],
+                ['code' => $data[0]],
                 [
-                    'head' => $data[0],
+                    'code' => $data[0],
                     'description' => $data[1],
                     'head_type' => $data[2],
                     'deduction_applicability' => $data[3],

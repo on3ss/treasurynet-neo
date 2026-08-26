@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('detail_heads', function (Blueprint $table) {
             $table->id();
-            $table->char('head', 2)->unique();
+            $table->char('code', 2)->unique();
             $table->string('description');
             $table->enum('head_type', ['AC', 'DC', 'NA'])->default('NA');
             $table->json('deduction_applicability')->nullable();

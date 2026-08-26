@@ -45,7 +45,7 @@ class FormSeeder extends Seeder
                     continue;
                 }
 
-                $detailHead = DetailHead::where('head', $detailHeadCode)->first();
+                $detailHead = DetailHead::where('code', $detailHeadCode)->first();
 
                 if (!$detailHead) {
                     $this->command->warn("Skipping row #{$index}: Detail head not found: {$detailHeadCode}");

@@ -17,7 +17,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             FinancialYearSeeder::class,
             TreasurySeeder::class,
-            DepartmentSeeder::class
+            DepartmentSeeder::class,
+            DdoSeeder::class,
+            PaymentSchemeSeeder::class,
+            DetailHeadSeeder::class,
+            BillTypeSeeder::class,
+            FormSeeder::class
         ]);
     }
 }

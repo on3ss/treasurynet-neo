@@ -18,7 +18,7 @@ class DetailHeadsTable
     {
         return $table
             ->columns([
-                TextColumn::make('head')
+                TextColumn::make('code')
                     ->searchable(),
                 TextColumn::make('description')
                     ->searchable(),

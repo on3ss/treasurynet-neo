@@ -12,7 +12,7 @@ class DetailHeadInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('head'),
+                TextEntry::make('code'),
                 TextEntry::make('description'),
                 TextEntry::make('head_type'),
                 TextEntry::make('created_at')
