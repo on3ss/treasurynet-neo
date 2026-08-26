@@ -5,6 +5,7 @@ namespace App\Filament\Resources\FinancialYears;
 use App\Filament\Resources\FinancialYears\Pages\ManageFinancialYears;
 use App\Models\FinancialYear;
 use BackedEnum;
+use Filament\Tables\Filters\SelectFilter;
 use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -52,7 +53,8 @@ class FinancialYearResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('start_date')
                     ->label(__('Start Date'))
                     ->date()
@@ -63,10 +65,12 @@ class FinancialYearResource extends Resource
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->label(__('Active'))
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable(),
                 IconColumn::make('is_current')
                     ->label(__('Current'))
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label(__('Created At'))
                     ->dateTime()
@@ -85,6 +89,12 @@ class FinancialYearResource extends Resource
             ])
             ->filters([
                 TrashedFilter::make(),
+                SelectFilter::make('is_active')
+                    ->label('status')
+                    ->options([
+                        true => 'Active',
+                        false => 'Inactive'
+                    ])
             ])
             ->recordActions([
                 EditAction::make(),
