@@ -35,7 +35,7 @@ class DdoResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Masters';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::HomeModern;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
 
     protected static ?int $navigationSort = 4;
 
