@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->string('description');
             $table->char('sector_code', 2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique('code');
         });

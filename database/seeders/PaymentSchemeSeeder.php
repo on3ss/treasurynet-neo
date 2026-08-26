@@ -94,6 +94,7 @@ class PaymentSchemeSeeder extends Seeder
                 'sector_code' => $this->cleanNullableString($row['sector_code'] ?? null, 2),
                 'created_at' => now(),
                 'updated_at' => now(),
+                'deleted_at' => null,
             ];
 
             // Generate code if missing
