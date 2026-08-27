@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\DDOType;
+use App\Models\Ddo;
 use App\Models\Department;
 use App\Models\Treasury;
-use App\Models\Ddo;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -22,24 +22,24 @@ class DdoSeeder extends Seeder
     {
         $path = database_path('seeders/data/ddos.csv');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw new RuntimeException("DDO CSV not found: {$path}");
         }
 
         $handle = fopen($path, 'r');
 
-        if (!$handle) {
-            throw new RuntimeException("Unable to open DDO CSV.");
+        if (! $handle) {
+            throw new RuntimeException('Unable to open DDO CSV.');
         }
 
         $headers = fgetcsv($handle);
 
-        if (!$headers) {
-            throw new RuntimeException("DDO CSV is empty.");
+        if (! $headers) {
+            throw new RuntimeException('DDO CSV is empty.');
         }
 
         $headers = array_map(
-            fn($header) => trim($header),
+            fn ($header) => trim($header),
             $headers
         );
 
@@ -56,7 +56,7 @@ class DdoSeeder extends Seeder
 
                 $data = array_combine($headers, $row);
 
-                if (!$data) {
+                if (! $data) {
                     $skipped++;
 
                     continue;
@@ -86,7 +86,7 @@ class DdoSeeder extends Seeder
                     ->where('code', $treasuryCode)
                     ->first();
 
-                if (!$treasury) {
+                if (! $treasury) {
                     $this->command->warn(
                         "Treasury not found: {$treasuryCode} for DDO {$code}"
                     );
@@ -100,7 +100,7 @@ class DdoSeeder extends Seeder
                     ->where('code', $departmentCode)
                     ->first();
 
-                if (!$department) {
+                if (! $department) {
                     $this->command->warn(
                         "Department not found: {$departmentCode} for DDO {$code}"
                     );

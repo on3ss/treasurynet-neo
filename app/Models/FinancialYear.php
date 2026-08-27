@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
 
 class FinancialYear extends Model
 {
@@ -67,7 +67,7 @@ class FinancialYear extends Model
     {
         $now = Carbon::now();
         $currentFYStart = $now->month >= 4 ? $now->year : $now->year - 1;
-        $name = $currentFYStart . '-' . ($currentFYStart + 1);
+        $name = $currentFYStart.'-'.($currentFYStart + 1);
 
         return static::where('name', $name)->first();
     }
@@ -99,7 +99,7 @@ class FinancialYear extends Model
         /** @var Carbon $endDate */
         $endDate = $this->end_date;
 
-        return $startDate->format('d-m-Y') . ' to ' . $endDate->format('d-m-Y');
+        return $startDate->format('d-m-Y').' to '.$endDate->format('d-m-Y');
     }
 
     /**

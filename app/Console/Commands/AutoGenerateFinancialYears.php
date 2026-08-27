@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\FinancialYear;
-use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 
 class AutoGenerateFinancialYears extends Command
 {
@@ -37,14 +38,14 @@ class AutoGenerateFinancialYears extends Command
         $now = Carbon::now();
         $currentFYStart = $now->month >= 4 ? $now->year : $now->year - 1;
 
-        $this->info("Current Financial Year: {$currentFYStart}-" . ($currentFYStart + 1));
+        $this->info("Current Financial Year: {$currentFYStart}-".($currentFYStart + 1));
 
         $createdCount = 0;
         $updatedCount = 0;
 
         // Generate or update financial years
         for ($year = $currentFYStart - $yearsBefore; $year <= $currentFYStart + $yearsAfter; $year++) {
-            $name = $year . '-' . ($year + 1);
+            $name = $year.'-'.($year + 1);
 
             /** @var Carbon $startDate */
             $startDate = Carbon::create($year, 4, 1);
@@ -58,7 +59,7 @@ class AutoGenerateFinancialYears extends Command
             /** @var FinancialYear|null $financialYear */
             $financialYear = FinancialYear::where('name', $name)->first();
 
-            if (!$financialYear) {
+            if (! $financialYear) {
                 FinancialYear::create([
                     'name' => $name,
                     'start_date' => $startDate->format('Y-m-d'),
@@ -113,7 +114,7 @@ class AutoGenerateFinancialYears extends Command
         $this->ensureSingleCurrentYear($currentFYStart);
 
         $this->newLine();
-        $this->info("Financial years generated successfully!");
+        $this->info('Financial years generated successfully!');
         $this->info("Created: {$createdCount}, Updated: {$updatedCount}");
 
         return parent::SUCCESS;
@@ -124,9 +125,9 @@ class AutoGenerateFinancialYears extends Command
      */
     private function ensureSingleCurrentYear(int $currentFYStart): void
     {
-        $currentName = $currentFYStart . '-' . ($currentFYStart + 1);
+        $currentName = $currentFYStart.'-'.($currentFYStart + 1);
 
-        /** @var \Illuminate\Database\Eloquent\Collection<int, FinancialYear> $currentYears */
+        /** @var Collection<int, FinancialYear> $currentYears */
         $currentYears = FinancialYear::where('is_current', true)->get();
 
         foreach ($currentYears as $financialYear) {
@@ -141,7 +142,7 @@ class AutoGenerateFinancialYears extends Command
         /** @var FinancialYear|null $correctCurrent */
         $correctCurrent = FinancialYear::where('name', $currentName)->first();
 
-        if ($correctCurrent && !$correctCurrent->is_current) {
+        if ($correctCurrent && ! $correctCurrent->is_current) {
             $correctCurrent->is_current = true;
             $correctCurrent->is_active = true;
             $correctCurrent->save();

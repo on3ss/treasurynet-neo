@@ -23,7 +23,7 @@ class DetailHeadInfolist
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn(DetailHead $record): bool => $record->trashed()),
+                    ->visible(fn (DetailHead $record): bool => $record->trashed()),
             ]);
     }
 }

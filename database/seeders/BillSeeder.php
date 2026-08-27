@@ -15,8 +15,9 @@ use App\Models\Form;
 use App\Models\PaymentScheme;
 use App\Models\Treasury;
 use App\Services\BillNoSequenceService;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Faker\Factory;
+use Illuminate\Database\Seeder;
 
 class BillSeeder extends Seeder
 {
@@ -35,8 +36,9 @@ class BillSeeder extends Seeder
         // Get current financial year
         $currentFinancialYear = $this->getCurrentFinancialYear();
 
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $this->command->error('No financial year found. Please seed financial years first.');
+
             return;
         }
 
@@ -50,6 +52,7 @@ class BillSeeder extends Seeder
 
         if ($treasuries->isEmpty()) {
             $this->command->error('No treasuries found. Please seed treasuries first.');
+
             return;
         }
 
@@ -58,6 +61,7 @@ class BillSeeder extends Seeder
 
         if ($ddos->isEmpty()) {
             $this->command->error('No DDOs found. Please seed DDOs first.');
+
             return;
         }
 
@@ -83,14 +87,14 @@ class BillSeeder extends Seeder
             ->first();
 
         // If not found, try to find the most recent one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::where('end_date', '>=', $now)
                 ->orderBy('start_date')
                 ->first();
         }
 
         // If still not found, get the latest one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::latest('start_date')->first();
         }
 
@@ -116,7 +120,7 @@ class BillSeeder extends Seeder
         $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
         $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
 
-        return $startYear . '-' . $endYear;
+        return $startYear.'-'.$endYear;
     }
 
     /**
@@ -131,7 +135,7 @@ class BillSeeder extends Seeder
                 ->where('financial_year', $financialYear)
                 ->exists();
 
-            if (!$exists) {
+            if (! $exists) {
                 BillNoSequence::create([
                     'treasury_id' => $treasury->id,
                     'financial_year' => $financialYear,
@@ -217,7 +221,7 @@ class BillSeeder extends Seeder
         $endDate = min($endDate, now());
 
         return Carbon::instance(
-            \Faker\Factory::create()->dateTimeBetween($startDate, $endDate)
+            Factory::create()->dateTimeBetween($startDate, $endDate)
         );
     }
 
@@ -226,7 +230,7 @@ class BillSeeder extends Seeder
      */
     private function generateSourceBillId(): string
     {
-        return 'SRC-' . date('Y') . '-' . strtoupper(\Str::random(8));
+        return 'SRC-'.date('Y').'-'.strtoupper(\Str::random(8));
     }
 
     /**
@@ -235,6 +239,7 @@ class BillSeeder extends Seeder
     private function getRandomBillSource(): string
     {
         $sources = BillSource::cases();
+
         return $sources[array_rand($sources)]->value;
     }
 
@@ -244,6 +249,7 @@ class BillSeeder extends Seeder
     private function getRandomBillCategory(): string
     {
         $categories = BillCategory::cases();
+
         return $categories[array_rand($categories)]->value;
     }
 
@@ -253,6 +259,7 @@ class BillSeeder extends Seeder
     private function getRandomPaymentType(): string
     {
         $paymentTypes = PaymentType::cases();
+
         return $paymentTypes[array_rand($paymentTypes)]->value;
     }
 }

@@ -11,13 +11,13 @@ use App\Filament\Resources\Treasuries\Schemas\TreasuryInfolist;
 use App\Filament\Resources\Treasuries\Tables\TreasuriesTable;
 use App\Models\Treasury;
 use BackedEnum;
-use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class TreasuryResource extends Resource
 {

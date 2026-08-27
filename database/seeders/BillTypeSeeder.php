@@ -229,9 +229,10 @@ class BillTypeSeeder extends Seeder
         foreach ($billTypes as $data) {
             $detailHead = DetailHead::where('code', $data[0])->first();
 
-            if (!$detailHead) {
+            if (! $detailHead) {
                 $this->command->warn("Detail head not found: {$data[0]} (Bill Type: {$data[1]} - {$data[2]})");
                 $skipped++;
+
                 continue;
             }
 

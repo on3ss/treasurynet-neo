@@ -17,7 +17,7 @@ use App\Services\BillNoSequenceService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Bill>
+ * @extends Factory<Bill>
  */
 class BillFactory extends Factory
 {
@@ -89,19 +89,19 @@ class BillFactory extends Factory
             ->first();
 
         // If not found, try to find the most recent one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::where('end_date', '>=', $now)
                 ->orderBy('start_date')
                 ->first();
         }
 
         // If still not found, get the latest one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::latest('start_date')->first();
         }
 
         // If no financial years exist, create one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::factory()->create();
         }
 
@@ -127,7 +127,7 @@ class BillFactory extends Factory
         $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
         $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
 
-        return $startYear . '-' . $endYear;
+        return $startYear.'-'.$endYear;
     }
 
     /**
@@ -135,7 +135,7 @@ class BillFactory extends Factory
      */
     public function forFinancialYear(FinancialYear $financialYear): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'financial_year_id' => $financialYear->id,
         ]);
     }
@@ -145,7 +145,7 @@ class BillFactory extends Factory
      */
     public function forTreasury(Treasury $treasury): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'treasury_id' => $treasury->id,
         ]);
     }
@@ -155,7 +155,7 @@ class BillFactory extends Factory
      */
     public function forDdo(Ddo $ddo): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'ddo_id' => $ddo->id,
         ]);
     }
@@ -165,7 +165,7 @@ class BillFactory extends Factory
      */
     public function urgent(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'is_urgent' => true,
         ]);
     }
@@ -175,7 +175,7 @@ class BillFactory extends Factory
      */
     public function electronicPayment(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'payment_type' => PaymentType::ELECTRONIC->value,
         ]);
     }
@@ -185,7 +185,7 @@ class BillFactory extends Factory
      */
     public function cashPayment(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'payment_type' => PaymentType::CASH->value,
         ]);
     }
@@ -195,7 +195,7 @@ class BillFactory extends Factory
      */
     public function hillyCategory(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'category' => BillCategory::HILLY->value,
         ]);
     }
@@ -205,7 +205,7 @@ class BillFactory extends Factory
      */
     public function ebillingSource(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'source' => BillSource::EBILLING->value,
         ]);
     }
@@ -215,7 +215,7 @@ class BillFactory extends Factory
      */
     public function eisSource(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'source' => BillSource::EIS->value,
         ]);
     }
@@ -225,7 +225,7 @@ class BillFactory extends Factory
      */
     public function pensionSource(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'source' => BillSource::PENSION->value,
         ]);
     }

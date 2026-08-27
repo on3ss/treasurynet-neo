@@ -22,6 +22,6 @@ class PaymentScheme extends Model
         'charged_or_voted',
         'flag',
         'description',
-        'sector_code'
+        'sector_code',
     ];
 }

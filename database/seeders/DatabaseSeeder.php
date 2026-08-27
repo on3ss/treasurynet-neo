@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             PaymentSchemeSeeder::class,
             DetailHeadSeeder::class,
             BillTypeSeeder::class,
-            FormSeeder::class
+            FormSeeder::class,
         ]);
     }
 }

@@ -31,7 +31,7 @@ class TreasuryInfolist
                 TextEntry::make('deleted_at')
                     ->label(__('Deleted At'))
                     ->dateTime()
-                    ->visible(fn(Treasury $record): bool => $record->trashed()),
+                    ->visible(fn (Treasury $record): bool => $record->trashed()),
             ]);
     }
 }

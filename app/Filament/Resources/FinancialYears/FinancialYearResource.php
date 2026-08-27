@@ -5,8 +5,6 @@ namespace App\Filament\Resources\FinancialYears;
 use App\Filament\Resources\FinancialYears\Pages\ManageFinancialYears;
 use App\Models\FinancialYear;
 use BackedEnum;
-use Filament\Tables\Filters\SelectFilter;
-use UnitEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -21,10 +19,12 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class FinancialYearResource extends Resource
 {
@@ -42,7 +42,7 @@ class FinancialYearResource extends Resource
             ->components([
                 Toggle::make('is_active')
                     ->label(__('Active'))
-                    ->disabled(fn(?FinancialYear $record): bool => $record?->is_current ?? false)
+                    ->disabled(fn (?FinancialYear $record): bool => $record?->is_current ?? false)
                     ->required(),
             ]);
     }
@@ -93,8 +93,8 @@ class FinancialYearResource extends Resource
                     ->label('status')
                     ->options([
                         true => 'Active',
-                        false => 'Inactive'
-                    ])
+                        false => 'Inactive',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

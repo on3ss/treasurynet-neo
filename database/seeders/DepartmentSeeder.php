@@ -77,6 +77,6 @@ class DepartmentSeeder extends Seeder
             }
         });
 
-        $this->command->info('Departments seeded successfully: ' . count($departments) . ' records.');
+        $this->command->info('Departments seeded successfully: '.count($departments).' records.');
     }
 }

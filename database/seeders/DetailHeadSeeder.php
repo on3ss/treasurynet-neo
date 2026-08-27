@@ -86,6 +86,6 @@ class DetailHeadSeeder extends Seeder
             );
         }
 
-        $this->command->info('Successfully seeded ' . count($detailHeads) . ' detail heads.');
+        $this->command->info('Successfully seeded '.count($detailHeads).' detail heads.');
     }
 }

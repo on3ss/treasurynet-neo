@@ -5,9 +5,10 @@ namespace App\Services;
 use App\Models\BillNoSequence;
 use App\Models\FinancialYear;
 use App\Models\Treasury;
+use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class BillNoSequenceService
 {
@@ -19,10 +20,6 @@ class BillNoSequenceService
     /**
      * Get the next bill number for a treasury and financial year.
      *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @param int $paddingLength
-     * @return string
      * @throws Exception
      */
     public function getNextBillNo(
@@ -38,7 +35,7 @@ class BillNoSequenceService
                     ->lockForUpdate()
                     ->first();
 
-                if (!$sequence) {
+                if (! $sequence) {
                     // Create new sequence if it doesn't exist
                     $sequence = BillNoSequence::create([
                         'treasury_id' => $treasuryId,
@@ -59,7 +56,7 @@ class BillNoSequenceService
             Log::error('Failed to generate bill number', [
                 'treasury_id' => $treasuryId,
                 'financial_year' => $financialYear,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }
@@ -67,12 +64,6 @@ class BillNoSequenceService
 
     /**
      * Get multiple next bill numbers at once.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @param int $count
-     * @param int $paddingLength
-     * @return array
      */
     public function getNextBillNos(
         int $treasuryId,
@@ -90,7 +81,7 @@ class BillNoSequenceService
                 ->lockForUpdate()
                 ->first();
 
-            if (!$sequence) {
+            if (! $sequence) {
                 $sequence = BillNoSequence::create([
                     'treasury_id' => $treasuryId,
                     'financial_year' => $financialYear,
@@ -116,10 +107,6 @@ class BillNoSequenceService
 
     /**
      * Get current sequence information without incrementing.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @return BillNoSequence|null
      */
     public function getCurrentSequence(int $treasuryId, string $financialYear): ?BillNoSequence
     {
@@ -130,24 +117,16 @@ class BillNoSequenceService
 
     /**
      * Get current sequence number without incrementing.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @return int
      */
     public function getCurrentSequenceNo(int $treasuryId, string $financialYear): int
     {
         $sequence = $this->getCurrentSequence($treasuryId, $financialYear);
+
         return $sequence ? $sequence->last_sequence_no : 0;
     }
 
     /**
      * Preview next bill number without incrementing.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @param int $paddingLength
-     * @return string
      */
     public function previewNextBillNo(
         int $treasuryId,
@@ -162,11 +141,6 @@ class BillNoSequenceService
 
     /**
      * Reset sequence for a treasury and financial year.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @param int $startFrom
-     * @return bool
      */
     public function resetSequence(int $treasuryId, string $financialYear, int $startFrom = 0): bool
     {
@@ -193,19 +167,15 @@ class BillNoSequenceService
             Log::error('Failed to reset bill number sequence', [
                 'treasury_id' => $treasuryId,
                 'financial_year' => $financialYear,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
 
     /**
      * Set sequence to a specific number.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @param int $sequenceNo
-     * @return bool
      */
     public function setSequence(int $treasuryId, string $financialYear, int $sequenceNo): bool
     {
@@ -232,8 +202,9 @@ class BillNoSequenceService
             Log::error('Failed to set bill number sequence', [
                 'treasury_id' => $treasuryId,
                 'financial_year' => $financialYear,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -241,8 +212,7 @@ class BillNoSequenceService
     /**
      * Get all sequences for a treasury.
      *
-     * @param int $treasuryId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getSequencesForTreasury(int $treasuryId)
     {
@@ -254,8 +224,7 @@ class BillNoSequenceService
     /**
      * Get sequences for a specific financial year.
      *
-     * @param string $financialYear
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getSequencesForFinancialYear(string $financialYear)
     {
@@ -267,10 +236,6 @@ class BillNoSequenceService
 
     /**
      * Check if sequence exists for treasury and financial year.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @return bool
      */
     public function sequenceExists(int $treasuryId, string $financialYear): bool
     {
@@ -281,10 +246,6 @@ class BillNoSequenceService
 
     /**
      * Delete sequence for a treasury and financial year.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @return bool
      */
     public function deleteSequence(int $treasuryId, string $financialYear): bool
     {
@@ -296,16 +257,15 @@ class BillNoSequenceService
             Log::error('Failed to delete bill number sequence', [
                 'treasury_id' => $treasuryId,
                 'financial_year' => $financialYear,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
 
     /**
      * Get statistics for sequences.
-     *
-     * @return array
      */
     public function getStatistics(): array
     {
@@ -325,7 +285,6 @@ class BillNoSequenceService
     /**
      * Initialize sequences for all treasuries for a financial year.
      *
-     * @param string $financialYear
      * @return int Number of sequences created
      */
     public function initializeSequencesForFinancialYear(string $financialYear): int
@@ -334,7 +293,7 @@ class BillNoSequenceService
         $count = 0;
 
         foreach ($treasuries as $treasury) {
-            if (!$this->sequenceExists($treasury->id, $financialYear)) {
+            if (! $this->sequenceExists($treasury->id, $financialYear)) {
                 BillNoSequence::create([
                     'treasury_id' => $treasury->id,
                     'financial_year' => $financialYear,
@@ -349,9 +308,6 @@ class BillNoSequenceService
 
     /**
      * Convert FinancialYear model to string format (e.g., '2026-2027')
-     *
-     * @param FinancialYear $financialYear
-     * @return string
      */
     public function getFinancialYearString(FinancialYear $financialYear): string
     {
@@ -365,6 +321,6 @@ class BillNoSequenceService
         $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
         $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
 
-        return $startYear . '-' . $endYear;
+        return $startYear.'-'.$endYear;
     }
 }

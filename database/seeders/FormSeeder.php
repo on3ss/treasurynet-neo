@@ -17,8 +17,9 @@ class FormSeeder extends Seeder
     {
         $csvPath = database_path('seeders/data/forms.csv');
 
-        if (!File::exists($csvPath)) {
+        if (! File::exists($csvPath)) {
             $this->command->error("CSV file not found at: {$csvPath}");
+
             return;
         }
 
@@ -26,6 +27,7 @@ class FormSeeder extends Seeder
 
         if (empty($csvData)) {
             $this->command->warn('No data found in CSV file');
+
             return;
         }
 
@@ -42,14 +44,16 @@ class FormSeeder extends Seeder
                 if (empty($formName)) {
                     $this->command->warn("Skipping row #{$index}: Empty form name");
                     $skipped++;
+
                     continue;
                 }
 
                 $detailHead = DetailHead::where('code', $detailHeadCode)->first();
 
-                if (!$detailHead) {
+                if (! $detailHead) {
                     $this->command->warn("Skipping row #{$index}: Detail head not found: {$detailHeadCode}");
                     $skipped++;
+
                     continue;
                 }
 
@@ -57,9 +61,10 @@ class FormSeeder extends Seeder
                     ->where('code', $billTypeCode)
                     ->first();
 
-                if (!$billType) {
+                if (! $billType) {
                     $this->command->warn("Skipping row #{$index}: Bill type not found for detail head {$detailHeadCode}, code {$billTypeCode}");
                     $skipped++;
+
                     continue;
                 }
 
@@ -104,8 +109,9 @@ class FormSeeder extends Seeder
 
         if (($handle = fopen($filePath, 'r')) !== false) {
             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-                if (!$header) {
+                if (! $header) {
                     $header = array_map('trim', $row);
+
                     continue;
                 }
 

@@ -1,7 +1,11 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\BillNoSequenceServiceProvider;
+use App\Providers\Filament\DashboardPanelProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\BillNoSequenceServiceProvider::class,
-    App\Providers\Filament\DashboardPanelProvider::class,
+    AppServiceProvider::class,
+    BillNoSequenceServiceProvider::class,
+    DashboardPanelProvider::class,
 ];
