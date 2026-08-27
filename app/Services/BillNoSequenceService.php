@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\BillNoSequence;
+use App\Models\FinancialYear;
+use App\Models\Treasury;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -50,7 +52,7 @@ class BillNoSequenceService
                     $sequence->update(['last_sequence_no' => $nextSequence]);
                 }
 
-                // Return formatted bill number
+                // Return formatted bill number as string
                 return str_pad($nextSequence, $paddingLength, '0', STR_PAD_LEFT);
             });
         } catch (Exception $e) {
@@ -95,6 +97,7 @@ class BillNoSequenceService
                     'last_sequence_no' => $count,
                 ]);
                 $startSequence = 1;
+                $endSequence = $count;
             } else {
                 $startSequence = $sequence->last_sequence_no + 1;
                 $endSequence = $startSequence + $count - 1;
@@ -263,14 +266,17 @@ class BillNoSequenceService
     }
 
     /**
-     * Validate financial year format.
+     * Check if sequence exists for treasury and financial year.
      *
+     * @param int $treasuryId
      * @param string $financialYear
      * @return bool
      */
-    public function isValidFinancialYear(string $financialYear): bool
+    public function sequenceExists(int $treasuryId, string $financialYear): bool
     {
-        return preg_match('/^\d{4}-\d{4}$/', $financialYear) === 1;
+        return BillNoSequence::where('treasury_id', $treasuryId)
+            ->where('financial_year', $financialYear)
+            ->exists();
     }
 
     /**
@@ -297,20 +303,6 @@ class BillNoSequenceService
     }
 
     /**
-     * Check if sequence exists for treasury and financial year.
-     *
-     * @param int $treasuryId
-     * @param string $financialYear
-     * @return bool
-     */
-    public function sequenceExists(int $treasuryId, string $financialYear): bool
-    {
-        return BillNoSequence::where('treasury_id', $treasuryId)
-            ->where('financial_year', $financialYear)
-            ->exists();
-    }
-
-    /**
      * Get statistics for sequences.
      *
      * @return array
@@ -325,7 +317,54 @@ class BillNoSequenceService
             'avg_sequence' => round(BillNoSequence::avg('last_sequence_no'), 2),
             'recent_sequences' => BillNoSequence::latest('updated_at')
                 ->take(10)
-                ->get(['treasury_id', 'financial_year', 'last_sequence_no', 'updated_at']),
+                ->with('treasury')
+                ->get(),
         ];
+    }
+
+    /**
+     * Initialize sequences for all treasuries for a financial year.
+     *
+     * @param string $financialYear
+     * @return int Number of sequences created
+     */
+    public function initializeSequencesForFinancialYear(string $financialYear): int
+    {
+        $treasuries = Treasury::all();
+        $count = 0;
+
+        foreach ($treasuries as $treasury) {
+            if (!$this->sequenceExists($treasury->id, $financialYear)) {
+                BillNoSequence::create([
+                    'treasury_id' => $treasury->id,
+                    'financial_year' => $financialYear,
+                    'last_sequence_no' => 0,
+                ]);
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Convert FinancialYear model to string format (e.g., '2026-2027')
+     *
+     * @param FinancialYear $financialYear
+     * @return string
+     */
+    public function getFinancialYearString(FinancialYear $financialYear): string
+    {
+        // Assuming FinancialYear has 'name' or 'year' field
+        // Adjust based on your actual FinancialYear model structure
+        if (isset($financialYear->name)) {
+            return $financialYear->name;
+        }
+
+        // Fallback: generate from start_date and end_date
+        $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
+        $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
+
+        return $startYear . '-' . $endYear;
     }
 }

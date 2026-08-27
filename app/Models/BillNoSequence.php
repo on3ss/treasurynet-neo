@@ -15,6 +15,7 @@ class BillNoSequence extends Model
 
     protected $casts = [
         'last_sequence_no' => 'integer',
+        'treasury_id' => 'integer',
     ];
 
     /**

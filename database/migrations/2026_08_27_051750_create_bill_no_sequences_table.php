@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('bill_no_sequences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('treasury_id')->constrained()->onDelete('restrict');
-            $table->string('financial_year', 9); // Format: '2024-2025'
+            $table->string('financial_year', 9);
             $table->unsignedBigInteger('last_sequence_no')->default(0);
             $table->timestamps();
 
