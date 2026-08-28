@@ -9,12 +9,14 @@ use App\Models\Bill;
 use App\Models\BillNoSequence;
 use App\Models\BillType;
 use App\Models\Ddo;
+use App\Models\Deduction;
 use App\Models\DetailHead;
 use App\Models\FinancialYear;
 use App\Models\Form;
 use App\Models\Gross;
 use App\Models\Payee;
 use App\Models\PaymentScheme;
+use App\Models\ReceiptScheme;
 use App\Models\SubDetailHead;
 use App\Models\Treasury;
 use App\Services\BillNoSequenceService;
@@ -55,6 +57,7 @@ class BillSeeder extends Seeder
         $treasuries = Treasury::all();
         $ddos = Ddo::all();
         $paymentSchemes = PaymentScheme::all();
+        $receiptSchemes = ReceiptScheme::all();
         $detailHeads = DetailHead::with('subDetailHeads')->get();
         $billTypes = BillType::all();
         $forms = Form::all();
@@ -72,6 +75,11 @@ class BillSeeder extends Seeder
 
         if ($paymentSchemes->isEmpty()) {
             $this->command->error('No payment schemes found. Please seed payment schemes first.');
+            return;
+        }
+
+        if ($receiptSchemes->isEmpty()) {
+            $this->command->error('No receipt schemes found. Please seed receipt schemes first.');
             return;
         }
 
@@ -93,6 +101,7 @@ class BillSeeder extends Seeder
                 $treasury,
                 $ddos,
                 $paymentSchemes,
+                $receiptSchemes,
                 $detailHeads,
                 $billTypes,
                 $forms
@@ -186,6 +195,7 @@ class BillSeeder extends Seeder
         Treasury $treasury,
         $ddos,
         $paymentSchemes,
+        $receiptSchemes,
         $detailHeads,
         $billTypes,
         $forms
@@ -213,6 +223,9 @@ class BillSeeder extends Seeder
 
                 // Create gross entries for this bill
                 $this->createGrossEntriesForBill($bill, $detailHeads->random());
+
+                // Create deductions for this bill
+                $this->createDeductionsForBill($bill, $receiptSchemes);
 
                 // Create payees for this bill
                 $this->createPayeesForBill($bill);
@@ -324,15 +337,69 @@ class BillSeeder extends Seeder
     }
 
     /**
+     * Create deductions for a bill.
+     */
+    private function createDeductionsForBill(Bill $bill, $receiptSchemes): void
+    {
+        if ($receiptSchemes->isEmpty()) {
+            return;
+        }
+
+        // Generate 0-3 deductions per bill
+        $deductionCount = rand(0, 3);
+
+        if ($deductionCount === 0) {
+            return;
+        }
+
+        // Calculate total deductions (should be less than gross amount)
+        $maxDeduction = $bill->gross_amount * 0.2; // Max 20% deductions
+        $totalDeductions = rand(100, max(100, (int) $maxDeduction));
+
+        // Ensure deductions don't exceed gross amount
+        $totalDeductions = min($totalDeductions, $bill->gross_amount * 0.5);
+
+        if ($totalDeductions <= 0) {
+            return;
+        }
+
+        $remainingDeduction = $totalDeductions;
+        $selectedReceiptSchemes = $receiptSchemes->random(min($deductionCount, $receiptSchemes->count()));
+
+        foreach ($selectedReceiptSchemes as $index => $receiptScheme) {
+            // Last deduction gets remaining amount
+            if ($index === $selectedReceiptSchemes->count() - 1) {
+                $amount = $remainingDeduction;
+            } else {
+                // Random portion of remaining deduction (20-60%)
+                $amount = round($remainingDeduction * rand(20, 60) / 100, 2);
+                $remainingDeduction -= $amount;
+            }
+
+            if ($amount > 0) {
+                Deduction::create([
+                    'bill_id' => $bill->id,
+                    'receipt_scheme_id' => $receiptScheme->id,
+                    'amount' => $amount,
+                ]);
+            }
+        }
+    }
+
+    /**
      * Create payees for a bill.
      */
     private function createPayeesForBill(Bill $bill): void
     {
+        // Calculate net amount after deductions for payee distribution
+        $totalDeductions = $bill->deductions()->sum('amount');
+        $netPayableAmount = $bill->net_amount;
+
         // Generate 1-5 payees per bill
         $payeeCount = rand(1, 5);
 
         // Calculate individual payee amounts that sum to bill's net amount
-        $remainingAmount = $bill->net_amount;
+        $remainingAmount = $netPayableAmount;
 
         for ($i = 0; $i < $payeeCount; $i++) {
             // Last payee gets the remaining amount

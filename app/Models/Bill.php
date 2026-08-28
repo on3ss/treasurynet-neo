@@ -102,6 +102,11 @@ class Bill extends Model
         return $this->hasMany(Gross::class);
     }
 
+    public function deductions(): HasMany
+    {
+        return $this->hasMany(Deduction::class);
+    }
+
     /**
      * Get the total gross amount for this bill.
      */

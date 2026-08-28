@@ -6,6 +6,7 @@ use App\Filament\Resources\Bills\Pages\CreateBill;
 use App\Filament\Resources\Bills\Pages\EditBill;
 use App\Filament\Resources\Bills\Pages\ListBills;
 use App\Filament\Resources\Bills\Pages\ViewBill;
+use App\Filament\Resources\Bills\RelationManagers\DeductionsRelationManager;
 use App\Filament\Resources\Bills\RelationManagers\GrossesRelationManager;
 use App\Filament\Resources\Bills\Schemas\BillForm;
 use App\Filament\Resources\Bills\Schemas\BillInfolist;
@@ -50,6 +51,7 @@ class BillResource extends Resource
         return [
             RelationManagers\PayeesRelationManager::class,
             RelationManagers\GrossesRelationManager::class,
+            RelationManagers\DeductionsRelationManager::class,
         ];
     }
 
