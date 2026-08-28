@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DetailHead extends Model
@@ -19,6 +20,11 @@ class DetailHead extends Model
     protected $casts = [
         'deduction_applicability' => 'array',
     ];
+
+    public function subDetailHeads(): HasMany
+    {
+        return $this->hasMany(SubDetailHead::class);
+    }
 
     /**
      * Scope for AC heads

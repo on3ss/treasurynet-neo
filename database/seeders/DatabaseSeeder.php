@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             DdoSeeder::class,
             PaymentSchemeSeeder::class,
+            ReceiptSchemeSeeder::class,
             DetailHeadSeeder::class,
+            SubDetailHeadSeeder::class,
             BillTypeSeeder::class,
             FormSeeder::class,
             BillSeeder::class

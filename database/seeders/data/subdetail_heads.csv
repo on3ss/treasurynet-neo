@@ -1,0 +1,310 @@
+"detail_head","subdetail_head","subdetail_desc","plus_minus","code"
+"02","03",Substantive Pay,+,0
+"11","01",T E On Tour,+,0
+"11","02",T E Advance,+,0
+"11","03",(T E ON RETIREMENT),+,0
+"11","04",T E on Transfer,+,0
+"11","07",Others,+,0
+"11","05",(T A ON MEDICAL TREATMENT),+,0
+"97","01",Temporary Advances,+,0
+"12","01",Foreign Travel Expenses,+,0
+"11","06",(FINAL T A -MEDICAL TREATMENT),+,0
+"28","07",Remuneration of Casual Artist,+,0
+"28","08",Payment for Service Rendered,+,0
+"28","10",OTHER RENUNERATION,+,0
+"03","01",Honoraium,+,0
+"12","09",OTHERS,+,0
+"03","09",OTHERS,+,
+"13","19",Others,+,0
+"14","09",Others,+,0
+"16","09",Others,+,0
+"20","09",Others,+,0
+"21","09",Others,+,0
+"22","09",Others,+,0
+"23","09",Others,+,0
+"24","09",Others,+,0
+"25","09",Others,+,0
+"26","09",Others,+,0
+"27","09",Others,+,0
+"28","19",Others,+,0
+"30","09",Others,+,0
+"31","09",Others,+,0
+"32","09",OTHERS,+,0
+"33","09",Others,+,0
+"34","09",Others,+,0
+"45","09",Others,+,0
+"50","09",HONORAIUM,+,0
+"51","09",Others,+,0
+"52","09",Others,+,0
+"97","02",Non-Refundable Advances,+,
+"97","03",Final Withdrawal,+,
+"97","04",Deposit Linked Insurance Scheme,+,
+"02","04",Leave Salary,+,
+"11","08",CANCELLATION CHARGES,+,
+"50","19",OTHERS,+,
+"02","05",Officiating Pay,+,
+"02","06",COMPENSATORY ALLOWANCE,+,
+"02","07",DEARNESS ALLOWANCE,+,
+"02","08",WINTER ALLOWANCE,+,
+"02","09",OTHERS,+,
+"30","30",CHCA,+,
+"23","03",Ration,+,
+"13","09",CONTINGENCY BILL,+,
+"53","01",MISCELLANEOUS BILL,+,
+"11","09",FINAL T.A ON TOUR,+,
+"96","01",Refunds,+,
+"95","01",Deposits,+,
+"31","10",AGENCY,+,
+"06","01",MEDICAL ADVANCE,+,
+"06","02",MEDICAL REIMBURSEMENT,+,
+"94","01",Recoupment of P A,+,0
+"04","16",TA ON MED. TREATMENT,+,
+"97","05",TRANSFER FROM AG,+,
+"02","01",Daily Wages,+,0
+"02","02",Fixed Monthly Wages,+,0
+"04","01",Provisional Pension,+,0
+"04","02",D.C.R.G (Provisional),+,0
+"04","03",Service Pension,+,0
+"04","04",Family Pension,+,0
+"04","05",Commutation Pension,+,0
+"04","06",D.C.R.G (Final),+,0
+"04","07",Residuary Gratuity,+,0
+"04","08",Leave Encashment,+,0
+"04","09",M L A Pension,+,0
+"04","10",L T C,+,0
+"04","11",Medical Treatment for Retirees,+,0
+"04","12",Medical Treatment for EX-MLA,+,0
+"04","13",T E for  Retires MLA,+,0
+"04","14",T E for  EX-MLA,+,0
+"04","15",Others,+,0
+"13","01",Exp. for Refreshment (Meeting),+,0
+"13","02",P O L on Office Vehicle,+,0
+"13","03",Office Expenses,+,0
+"13","04",Permanent Advance,+,0
+"13","06",Purchase of Motor Vehicle,+,0
+"13","08",Electricity Charges,+,0
+"13","10",Telephone Bills,+,0
+"13","11",Service Postage Stamps,+,0
+"13","12",Furniture,+,0
+"13","13",Repairs of Motor Vehicle,+,0
+"14","01",House Rent (Hired Building),+,0
+"14","02",Rates & Taxed,+,0
+"16","01",Publication,+,0
+"20","01",Expenses on Training Programme,+,0
+"20","02",Expenses on workshop/Seminars/Conference,+,0
+"20","03",Gift and Expenses on conducted,+,0
+"20","04",Expense on Departmental Canteen,+,0
+"20","05",Hospitality/Entertainment Expences,+,0
+"21","01",Expenses on Material and Supply,+,0
+"21","02",Expenses on Stores and Equipment,+,0
+"01","02",Dearness Pay (DP),+,1
+"01","03",Dearness Allowances (DA),+,1
+"01","04",Special Pay (SP),+,1
+"01","06",H R A,+,1
+"01","07",Hills Allowance (HA/HCA/CHCA),+,1
+"01","08",Winter Allowances (WA),+,1
+"01","09",INTERIM RELIEF,+,7
+"01","10",Fixed Travel Allowances,+,2
+"01","11",Festival Advances,+,5
+"01","12",Medical Reinbursement,+,5
+"01","13",Medical Advance,+,5
+"01","14",L T C / H T C (Final),+,5
+"01","15",L T C / H T C (Advance),+,5
+"01","16",Risk Allowances,+,2
+"01","17",T I A,+,2
+"01","18",Kit Maintanance Allowance (KMA),+,2
+"01","19",Rural Allowances,+,2
+"01","20",Honorarium,+,5
+"01","22",Secretariat Allowances,+,4
+"01","23",Telephone Allowances,+,4
+"01","24",Postage Allowances,+,4
+"01","25",Constituency Allowances,+,4
+"01","26",Driver Allowances,+,4
+"01","28",S D A,+,1
+"01","30",Arrear H R A,+,1
+"01","29",Subsustance Allowance,+,1
+"01","31",Arrear PAY / D A,+,3
+"01","32",Arrear Increment,+,3
+"01","33",Arrear Winter Allowance,+,3
+"01","35",E.S.I. ALLOWANCE,+,2
+"01","36",RETAINING FEE,+,2
+"01","37",CE ALLOWANCE,+,5
+"01","50",OTHERS,+,7
+"01","51",ADJUSTMENT,-,7
+"22","01",Expenses on Arms & Ammunition for Police,+,0
+"22","02",Expenses on Arms & Ammunition for Other Paramilitary Forces,+,0
+"23","01",RATION  OTHER PARA-MILITARY,+,0
+"23","02",RATION POLICE,+,0
+"24","01",POL,+,0
+"25","01",Other Clothing and Tentage of ,+,0
+"25","02",Uniforms,+,0
+"25","03",Other Clothing and Tentage of Police,+,0
+"25","04",Other Clothing and Tentage of Other Paramilitary Force,+,0
+"26","01",Expences on Exhibition,+,0
+"26","02",Advertisement,+,0
+"26","03",Commission to Agent for sales ,+,0
+"27","01",Repairs and Maintenance work,+,0
+"27","02",Repairs and maintenance of Mac,+,0
+"28","01",Fees to Staff Artist,+,0
+"28","02",Payment to Service Suppliers,+,0
+"28","03",Payment to service Rendered,+,0
+"28","04",Consultant Fees,+,0
+"28","05",Legal Services,+,0
+"28","06",Remuneration of Examinaries/Lecturers etc.,+,0
+"28","09",Payment for Service Suppliers,+,0
+"30","01",Contract Service,+,0
+"31","01",Organization,+,0
+"31","02",Public Service Undertaking,+,0
+"31","03",Autonomous Bodies,+,0
+"31","04",Local Authorities,+,0
+"31","05",Corporation,+,0
+"31","06",College,+,0
+"31","07",School,+,0
+"31","08",N G O,+,0
+"32","01",Membership on International Bodies,+,0
+"33","01",Autonomous Bodies,+,0
+"33","02",PSU sponsored by State Govt.,+,0
+"33","03",Co-operation,+,0
+"33","04",Industries,+,0
+"34","01",School ,+,0
+"34","02",College,+,0
+"34","03",University,+,0
+"34","04",Technical Institute,+,0
+"34","05",Professional Institute,+,0
+"45","01",Interest on Capital,+,0
+"45","02",Discounts on Loans,+,0
+"50","01",OTHER CHARGES,+,0
+"50","02",Commission,+,0
+"50","03",Custom Duty,+,0
+"50","04",Compensation,+,0
+"50","05",Payment to Discretionary Grant,+,0
+"50","06",Other Discounts,+,0
+"50","07",Custom Duties,+,0
+"50","08",Award and Prizes,+,0
+"51","01","Repairs of Ambulance, Van ",+,0
+"51","02","Purchase of Ambulance, Van",+,0
+"52","01",Purchase of Machinery and Equip (Tools and Plants),+,0
+"52","02",Maintenance of Machinery and Equip (Tools and Plants),+,0
+"55","06",Loan and Advances granted to Corporation,+,0
+"55","09",Others,+,0
+"55","03",Loan and Advances granted to Autonomoue Bodies,+,0
+"55","04",Loan and Advances granted to Public Sector Undertaking,+,0
+"55","05",Loan and Advances granted to Public Sector Enterprise,+,0
+"55","02",Loan and Advances granted to Local Authorities,+,0
+"64","06",Others,+,0
+"64","01",House Building Advance,+,0
+"64","02",Computer Advance,+,0
+"64","03",Scooter Advance,+,0
+"64","04",House Ext. Advance,+,0
+"64","05",Motor Car Advance,+,0
+"41","01",SECRET SERVICE EXPENDITURE,+,
+"41","09",OTHERS,+,
+"28","11",RETAINER FEES,+,
+"51","03",REPAIR OF VEHICLES,+,
+"06","03",TA Adv on Medical Treatment,+,
+"06","04",Final TA on Medical Treatment,+,
+"05","01",REWARDS,+,
+"04","17",TE ON RETIREMENT,+,
+"53","02",MAINTAINANCE &CONSTRUCTION,+,
+"43","01",SETTLEMENT OF INTERESTS,+,
+"04","18",MED ADV FOR RETIREES,+,
+"04","19",MEDC RE-IMBURSEMENT  RETIREES,+,
+"08","01",REFUND AMOUNT,+,
+"04","20",ARR INTERIM RELIEF,+,
+"16","02",SUBSCRIPTION,+,
+"04","21",AG SUSPENSE,+,
+"15","00",ROYALTY,+,
+"04","99",ADJUSTMENT,-,
+"04","22",ADV TA ON MED TREATMENT,+,
+"04","23",VOLENTARY RETIREMENT SCHEME,+,
+"06","05",ADJUSTMENT,-,
+"11","10",ADJUSTMENT,-,
+"11","11",COVEYANCE ALLOWANCE,+,
+"04","24","30 % ARREAR",+,
+"31","11","40 & ARREAR",+,
+"54","01",MISC BILL,+,
+"01","58",SP. COMP.  ALLOWANCE (AIS),+,2
+"35","01",GR CREATION FOR CAPITAL ASSETS,+,
+"04","25",GOVT CONTRIB NPS,+,
+"43","02",SUSPENSE,+,
+"01","38",AREAR EXT PAY,+,4
+"01","40",PRE AUDIT PAY BILL,+,6
+"01","46",CONVEYANCE ALLOWANCES (CA),+,5
+"01","42",Personal Pay,+,2
+"01","43",JOINING TIME PAY,+,2
+"01","44",LEAVE SALARY,+,1
+"01","45",PRE-AUDIT BILLS,+,6
+"01","47",GRADE PAY,+,2
+"01","48",SPECIAL H C A,+,2
+"01","49",Galantry Award,+,2
+"01","52",SUMPTUARY  ALLOWANCE,+,5
+"01","53",LODGING ALLOWANCE,+,5
+"01","54",ARR INTERIM RELIEF,+,4
+"01","56",ADVANCE PAY,+,5
+"01","62","30% ARREAR (IST)",+,4
+"01","60",TRANSPORT ALLOWANCE,+,3
+"01","59",DEPTT. ALLOWANCE,+,5
+"01","61",ELECTRIC ALLOWANCE,+,5
+"01","63","60% ARREAR",+,4
+"01","64",STUDY ALLOWANCE,+,5
+"01","66",CASH HANDLING ALLOWANCE,+,2
+"01","67",TECHNICAL ALLOWANCE,+,5
+"01","68",WASHING ALLOWANCE,+,2
+"01","69",FITNESS ALLOWANCE,+,2
+"01","70",ENCASHMENT OF EL ON LTC(AIS),+,5
+"01","71","30% ARREAR (2ND)",+,4
+"31","12",ARREAR,+,
+"12","08",ADJUSTMENT,-,
+"00","01",ADVANCE FROM CF,+,
+"01","01",Basic Pay / Salary,+,1
+"01","05",Medical Allowances (MA),+,1
+"01","27",OFFICIATING PAY,+,1
+"55","01",Loan and Advances granted to Government Employee,+,0
+"50","10",D L I S,+,0
+"01","21",Non Practice Allowance,+,1
+"01","34",Arrear Special Pay,+,3
+"01","39",ROBE ALLOWANCES,+,2
+"01","41",Uniform Allowance,+,2
+"01","57",SP. ALLOWANCE,+,2
+"01","65",MESS ALLOWANCE,+,2
+"10","01",DEDUCT/REFUND,+,
+"06","06",OTHERS,+,
+"13","20",ADJUSTMENT,-,
+"01","72",SPL COM ALLW (RL),+,
+"01","73",MILITARY  SERVICE PAY,+,
+"05","05",HOUSE KEEPING,+,
+"12","10",ADVANCE,+,
+"01","74","30% ARREAR(3RD) PART 1",+,
+"01","75",RATION ALLOWANCE,+,
+"01","76",MISC,+,
+"01","80",POLICE MEDAL ALLOWANCE,+,
+"01","77","7.5% ARREAR",+,
+"01","78",NURSING ALLOWANCE,+,
+"01","79",DETACHMENT ALLOWANCE,+,
+"13","07",Stationery,+,0
+"01","81",Charge Allowance,+,
+"01","82",Concurrence Charge Allowance,+,
+"01","83",DA on Transport Allowance,+,
+"01","84","22.5 % Arrear 5MPC",+,
+"36","01",GRANT- IN- AID ( NON-SALARY),+,
+"01","85",TOUGH LOCATION ALLOWANCE,+,
+"01","86",HOLIDAY FOREGONE,+,
+"01","87",City Compensatory Allowances,+,1
+"04","26",Leave Encashment Arrear,+,
+"01","55",Monetary Allowance,+,5
+"01","88",Casual Menial Allowance,+,1
+"01","89",POL Allowance,+,1
+"01","90",Telephone Allowance,+,1
+"01","91",Leave Encashment,+,1
+"01","92",Pension and Leave Salary Contribution,+,1
+"11","12",Composite Transfer Grant,+,
+"11","13",Time Barred TA,+,
+"01","93",Special Monetary Allowance,+,1
+"04","27",Pro Rata Pension,+,
+"01","94",Release from GOI,+,1
+"97","06",Residuary Payment,+,
+"01","95",Monetary Compensation LTC,+,1
+"53","03",MOBILISATION,+,
+"53","04",TRAVELLING ALLOWANCES,+,
+"01","96",Addl Sumpturary Allowance,+,1
+"56","01",Recoveries,+,0
