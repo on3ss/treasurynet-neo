@@ -18,6 +18,7 @@ class ReceiptScheme extends Model
         'minor_head',
         'subminor_head',
         'sub_head',
+        'code',
         'description',
         'sector_code',
     ];

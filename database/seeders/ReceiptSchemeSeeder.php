@@ -38,6 +38,13 @@ class ReceiptSchemeSeeder extends Seeder
 
         foreach ($rows as $index => $row) {
             try {
+                // Calculate the code (this will also be done by observer, but we include it for validation)
+                $expectedCode = $row[$headerMap['major_head']] .
+                    $row[$headerMap['submajor_head']] .
+                    $row[$headerMap['minor_head']] .
+                    $row[$headerMap['subminor_head']] .
+                    $row[$headerMap['sub_head']];
+
                 // Extract data from CSV
                 $data = [
                     'major_head' => trim($row[$headerMap['major_head']]),
@@ -45,16 +52,10 @@ class ReceiptSchemeSeeder extends Seeder
                     'minor_head' => trim($row[$headerMap['minor_head']]),
                     'subminor_head' => trim($row[$headerMap['subminor_head']]),
                     'sub_head' => trim($row[$headerMap['sub_head']]),
+                    'code' => $expectedCode,
                     'description' => trim($row[$headerMap['scheme_name']]),
                     'sector_code' => trim($row[$headerMap['sector_code']]) ?: null,
                 ];
-
-                // Calculate the code (this will also be done by observer, but we include it for validation)
-                $expectedCode = $data['major_head'] .
-                    $data['submajor_head'] .
-                    $data['minor_head'] .
-                    $data['subminor_head'] .
-                    $data['sub_head'];
 
                 // Check if record already exists (by code)
                 $existingRecord = ReceiptScheme::where('code', $expectedCode)->first();

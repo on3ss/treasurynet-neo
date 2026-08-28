@@ -17,10 +17,10 @@ return new class extends Migration {
             $table->char('minor_head', 3);
             $table->char('subminor_head', 2);
             $table->char('sub_head', 2);
-            $table->char('code', 13); // Changed from 17 to 13 to match actual concatenation
+            $table->char('code', 13);
             $table->string('description');
             $table->char('sector_code', 2)->nullable();
-            $table->timestamps(); // Only one timestamps call
+            $table->timestamps();
             $table->softDeletes();
 
             $table->unique('code');
