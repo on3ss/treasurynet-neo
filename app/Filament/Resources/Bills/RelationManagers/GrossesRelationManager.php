@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Bills\RelationManagers;
 
+use App\Filament\Columns\MoneyColumn;
 use App\Models\Gross;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
@@ -60,7 +61,7 @@ class GrossesRelationManager extends RelationManager
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn (Gross $record): bool => $record->trashed()),
+                    ->visible(fn(Gross $record): bool => $record->trashed()),
             ]);
     }
 
@@ -71,8 +72,7 @@ class GrossesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('subDetailHead.id')
                     ->searchable(),
-                TextColumn::make('amount')
-                    ->numeric()
+                MoneyColumn::make('amount')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -110,7 +110,7 @@ class GrossesRelationManager extends RelationManager
                     RestoreBulkAction::make(),
                 ]),
             ])
-            ->modifyQueryUsing(fn (Builder $query) => $query
+            ->modifyQueryUsing(fn(Builder $query) => $query
                 ->withoutGlobalScopes([
                     SoftDeletingScope::class,
                 ]));
