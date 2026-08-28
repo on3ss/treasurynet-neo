@@ -14,7 +14,7 @@ class ReceiptSchemeSeeder extends Seeder
      */
     public function run(): void
     {
-        $csvPath = database_path('seeders/data/payment_schemes.csv');
+        $csvPath = database_path('seeders/data/receipt_schemes.csv');
 
         if (!File::exists($csvPath)) {
             $this->command->error("CSV file not found at: {$csvPath}");

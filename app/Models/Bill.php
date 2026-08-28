@@ -95,6 +95,22 @@ class Bill extends Model
     }
 
     /**
+     * Get the grosses for this bill.
+     */
+    public function grosses(): HasMany
+    {
+        return $this->hasMany(Gross::class);
+    }
+
+    /**
+     * Get the total gross amount for this bill.
+     */
+    public function getTotalGrossAmountAttribute(): float
+    {
+        return $this->grosses()->sum('amount');
+    }
+
+    /**
      * Scope for urgent bills
      */
     public function scopeUrgent($query)

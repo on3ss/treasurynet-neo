@@ -24,6 +24,14 @@ class ReceiptSchemeObserver
         }
     }
 
+    public function saving(ReceiptScheme $receiptScheme): void
+    {
+        // Only regenerate if relevant fields have changed
+        if ($this->shouldRegenerateCode($receiptScheme)) {
+            $receiptScheme->code = $this->generateCode($receiptScheme);
+        }
+    }
+
     /**
      * Handle the ReceiptScheme "created" event.
      */

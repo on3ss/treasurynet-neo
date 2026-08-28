@@ -12,13 +12,16 @@ use App\Models\Ddo;
 use App\Models\DetailHead;
 use App\Models\FinancialYear;
 use App\Models\Form;
+use App\Models\Gross;
 use App\Models\Payee;
 use App\Models\PaymentScheme;
+use App\Models\SubDetailHead;
 use App\Models\Treasury;
 use App\Services\BillNoSequenceService;
 use Carbon\Carbon;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class BillSeeder extends Seeder
@@ -40,7 +43,6 @@ class BillSeeder extends Seeder
 
         if (!$currentFinancialYear) {
             $this->command->error('No financial year found. Please seed financial years first.');
-
             return;
         }
 
@@ -49,31 +51,56 @@ class BillSeeder extends Seeder
 
         $this->command->info("Seeding bills for financial year: {$financialYearString}");
 
-        // Get all treasuries
+        // Get all required data
         $treasuries = Treasury::all();
+        $ddos = Ddo::all();
+        $paymentSchemes = PaymentScheme::all();
+        $detailHeads = DetailHead::with('subDetailHeads')->get();
+        $billTypes = BillType::all();
+        $forms = Form::all();
 
+        // Validate required data exists
         if ($treasuries->isEmpty()) {
             $this->command->error('No treasuries found. Please seed treasuries first.');
-
             return;
         }
 
-        // Get all DDOs
-        $ddos = Ddo::all();
-
         if ($ddos->isEmpty()) {
             $this->command->error('No DDOs found. Please seed DDOs first.');
+            return;
+        }
 
+        if ($paymentSchemes->isEmpty()) {
+            $this->command->error('No payment schemes found. Please seed payment schemes first.');
+            return;
+        }
+
+        if ($detailHeads->isEmpty()) {
+            $this->command->error('No detail heads found. Please seed detail heads first.');
             return;
         }
 
         // Initialize bill number sequences for all treasuries
         $this->initializeSequences($financialYearString, $treasuries);
 
+        $totalBillsCreated = 0;
+
         // Generate bills for each treasury
         foreach ($treasuries as $treasury) {
-            $this->seedBillsForTreasury($currentFinancialYear, $financialYearString, $treasury, $ddos);
+            $billsCreated = $this->seedBillsForTreasury(
+                $currentFinancialYear,
+                $financialYearString,
+                $treasury,
+                $ddos,
+                $paymentSchemes,
+                $detailHeads,
+                $billTypes,
+                $forms
+            );
+            $totalBillsCreated += $billsCreated;
         }
+
+        $this->command->info("\n✅ Bill seeding completed! Total bills created: {$totalBillsCreated}");
     }
 
     /**
@@ -157,19 +184,54 @@ class BillSeeder extends Seeder
         FinancialYear $financialYear,
         string $financialYearString,
         Treasury $treasury,
-        $ddos
-    ): void {
+        $ddos,
+        $paymentSchemes,
+        $detailHeads,
+        $billTypes,
+        $forms
+    ): int {
         // Generate random number of bills (10-30) for each treasury
         $billCount = rand(10, 30);
+        $createdCount = 0;
 
         $this->command->info("Generating {$billCount} bills for treasury: {$treasury->name}");
 
-        for ($i = 0; $i < $billCount; $i++) {
-            $bill = $this->createBill($financialYear, $financialYearString, $treasury, $ddos->random());
+        DB::beginTransaction();
 
-            // Create payees for this bill
-            $this->createPayeesForBill($bill);
+        try {
+            for ($i = 0; $i < $billCount; $i++) {
+                $bill = $this->createBill(
+                    $financialYear,
+                    $financialYearString,
+                    $treasury,
+                    $ddos->random(),
+                    $paymentSchemes->random(),
+                    $detailHeads->random(),
+                    $billTypes->random(),
+                    $forms->random()
+                );
+
+                // Create gross entries for this bill
+                $this->createGrossEntriesForBill($bill, $detailHeads->random());
+
+                // Create payees for this bill
+                $this->createPayeesForBill($bill);
+
+                $createdCount++;
+
+                if ($i % 5 === 0) {
+                    $this->command->line("  ✓ Created {$createdCount} bills...");
+                }
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->command->error("Failed to seed bills for treasury {$treasury->name}: " . $e->getMessage());
+            Log::error("Bill seeding failed for treasury {$treasury->name}: " . $e->getMessage());
         }
+
+        return $createdCount;
     }
 
     /**
@@ -179,7 +241,11 @@ class BillSeeder extends Seeder
         FinancialYear $financialYear,
         string $financialYearString,
         Treasury $treasury,
-        Ddo $ddo
+        Ddo $ddo,
+        PaymentScheme $paymentScheme,
+        DetailHead $detailHead,
+        BillType $billType,
+        Form $form
     ): Bill {
         // Get next bill number
         $billNumber = $this->billNoSequenceService->getNextBillNo(
@@ -198,10 +264,10 @@ class BillSeeder extends Seeder
             'financial_year_id' => $financialYear->id,
             'treasury_id' => $treasury->id,
             'ddo_id' => $ddo->id,
-            'payment_scheme_id' => PaymentScheme::inRandomOrder()->first()?->id,
-            'detail_head_id' => DetailHead::inRandomOrder()->first()?->id,
-            'bill_type_id' => BillType::inRandomOrder()->first()?->id,
-            'form_id' => Form::inRandomOrder()->first()?->id,
+            'payment_scheme_id' => $paymentScheme->id,
+            'detail_head_id' => $detailHead->id,
+            'bill_type_id' => $billType->id,
+            'form_id' => $form->id,
             'bill_number' => (int) $billNumber,
             'source_bill_id' => $this->generateSourceBillId(),
             'bill_date' => $billDate,
@@ -212,6 +278,49 @@ class BillSeeder extends Seeder
             'is_urgent' => rand(0, 100) < 20,
             'payment_type' => $this->getRandomPaymentType(),
         ]);
+    }
+
+    /**
+     * Create gross entries for a bill.
+     */
+    private function createGrossEntriesForBill(Bill $bill, DetailHead $detailHead): void
+    {
+        // Get sub detail heads for this detail head
+        $subDetailHeads = $detailHead->subDetailHeads;
+
+        if ($subDetailHeads->isEmpty()) {
+            // If no sub detail heads exist for this detail head, try to get any sub detail head
+            $subDetailHeads = SubDetailHead::all();
+        }
+
+        if ($subDetailHeads->isEmpty()) {
+            $this->command->warn("  ⚠ No sub detail heads found. Skipping gross entries for bill {$bill->bill_number}");
+            return;
+        }
+
+        // Create 1-5 gross entries
+        $grossEntryCount = min(rand(1, 5), $subDetailHeads->count());
+
+        // Calculate amounts that sum to gross amount
+        $remainingAmount = $bill->gross_amount;
+        $selectedSubDetailHeads = $subDetailHeads->random($grossEntryCount);
+
+        foreach ($selectedSubDetailHeads as $index => $subDetailHead) {
+            // Last entry gets the remaining amount
+            if ($index === $grossEntryCount - 1) {
+                $amount = $remainingAmount;
+            } else {
+                // Random portion of remaining amount (30-70%)
+                $amount = round($remainingAmount * rand(30, 70) / 100, 2);
+                $remainingAmount -= $amount;
+            }
+
+            Gross::create([
+                'bill_id' => $bill->id,
+                'sub_detail_head_id' => $subDetailHead->id,
+                'amount' => $amount,
+            ]);
+        }
     }
 
     /**
@@ -236,7 +345,7 @@ class BillSeeder extends Seeder
             }
 
             // Generate unique reg_code for this bill
-            $regCode = $this->generatePayeeRegCode($i);
+            $regCode = $this->generatePayeeRegCode($bill, $i);
 
             // Create payee
             $payee = Payee::create([
@@ -265,12 +374,12 @@ class BillSeeder extends Seeder
     /**
      * Generate a unique payee registration code.
      */
-    private function generatePayeeRegCode(int $index): string
+    private function generatePayeeRegCode(Bill $bill, int $index): string
     {
         $prefixes = ['EMP', 'PEN', 'CON', 'VEN', 'SUP'];
         $prefix = $prefixes[array_rand($prefixes)];
 
-        return $prefix . '-' . date('Y') . '-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
+        return $prefix . '-' . $bill->bill_number . '-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -312,7 +421,7 @@ class BillSeeder extends Seeder
         $endDate = min($endDate, now());
 
         return Carbon::instance(
-            Factory::create()->dateTimeBetween($startDate, $endDate)
+            \Faker\Factory::create()->dateTimeBetween($startDate, $endDate)
         );
     }
 
