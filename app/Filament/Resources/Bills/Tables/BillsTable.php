@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Bills\Tables;
 
+use App\Filament\Columns\MoneyColumn;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -36,16 +37,10 @@ class BillsTable
                 TextColumn::make('billType.description')
                     ->label(__('Bill Type'))
                     ->searchable(),
-                TextColumn::make('net_amount')
-                    ->label(__('Net Amt'))
-                    ->numeric()
-                    ->sortable()
-                    ->money('INR'),
-                TextColumn::make('gross_amount')
-                    ->label(__('Gross Amt'))
-                    ->numeric()
-                    ->sortable()
-                    ->money('INR'),
+                MoneyColumn::make('net_amount')
+                    ->label('Net Amt'),
+                MoneyColumn::make('gross_amount')
+                    ->label('Gross Amt'),
                 IconColumn::make('is_urgent')
                     ->label(__('Urgent'))
                     ->boolean(),

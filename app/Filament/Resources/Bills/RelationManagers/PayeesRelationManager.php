@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Bills\RelationManagers;
 
+use App\Filament\Columns\MoneyColumn;
 use App\Models\Payee;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
@@ -77,7 +78,7 @@ class PayeesRelationManager extends RelationManager
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn (Payee $record): bool => $record->trashed()),
+                    ->visible(fn(Payee $record): bool => $record->trashed()),
             ]);
     }
 
@@ -90,8 +91,7 @@ class PayeesRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('amount')
-                    ->numeric()
+                MoneyColumn::make('amount')
                     ->sortable(),
                 TextColumn::make('ifsc')
                     ->searchable(),
@@ -140,7 +140,7 @@ class PayeesRelationManager extends RelationManager
                     RestoreBulkAction::make(),
                 ]),
             ])
-            ->modifyQueryUsing(fn (Builder $query) => $query
+            ->modifyQueryUsing(fn(Builder $query) => $query
                 ->withoutGlobalScopes([
                     SoftDeletingScope::class,
                 ]));
