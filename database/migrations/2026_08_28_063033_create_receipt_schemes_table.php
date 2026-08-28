@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('receipt_schemes', function (Blueprint $table) {
+            $table->id();
+            $table->char('major_head', 4);
+            $table->char('submajor_head', 2);
+            $table->char('minor_head', 3);
+            $table->char('subminor_head', 2);
+            $table->char('sub_head', 2);
+            $table->char('code', 13); // Changed from 17 to 13 to match actual concatenation
+            $table->string('description');
+            $table->char('sector_code', 2)->nullable();
+            $table->timestamps(); // Only one timestamps call
+            $table->softDeletes();
+
+            $table->unique('code');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('receipt_schemes');
+    }
+};
