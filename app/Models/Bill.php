@@ -7,6 +7,7 @@ use App\Enums\BillSource;
 use App\Enums\PaymentType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bill extends Model
@@ -86,6 +87,11 @@ class Bill extends Model
     public function form(): BelongsTo
     {
         return $this->belongsTo(Form::class);
+    }
+
+    public function payees(): HasMany
+    {
+        return $this->hasMany(Payee::class);
     }
 
     /**

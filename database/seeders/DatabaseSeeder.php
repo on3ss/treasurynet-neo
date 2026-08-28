@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             DetailHeadSeeder::class,
             BillTypeSeeder::class,
             FormSeeder::class,
+            BillSeeder::class
         ]);
     }
 }

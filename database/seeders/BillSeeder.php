@@ -12,12 +12,14 @@ use App\Models\Ddo;
 use App\Models\DetailHead;
 use App\Models\FinancialYear;
 use App\Models\Form;
+use App\Models\Payee;
 use App\Models\PaymentScheme;
 use App\Models\Treasury;
 use App\Services\BillNoSequenceService;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class BillSeeder extends Seeder
 {
@@ -36,7 +38,7 @@ class BillSeeder extends Seeder
         // Get current financial year
         $currentFinancialYear = $this->getCurrentFinancialYear();
 
-        if (! $currentFinancialYear) {
+        if (!$currentFinancialYear) {
             $this->command->error('No financial year found. Please seed financial years first.');
 
             return;
@@ -87,14 +89,14 @@ class BillSeeder extends Seeder
             ->first();
 
         // If not found, try to find the most recent one
-        if (! $currentFinancialYear) {
+        if (!$currentFinancialYear) {
             $currentFinancialYear = FinancialYear::where('end_date', '>=', $now)
                 ->orderBy('start_date')
                 ->first();
         }
 
         // If still not found, get the latest one
-        if (! $currentFinancialYear) {
+        if (!$currentFinancialYear) {
             $currentFinancialYear = FinancialYear::latest('start_date')->first();
         }
 
@@ -120,7 +122,7 @@ class BillSeeder extends Seeder
         $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
         $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
 
-        return $startYear.'-'.$endYear;
+        return $startYear . '-' . $endYear;
     }
 
     /**
@@ -135,7 +137,7 @@ class BillSeeder extends Seeder
                 ->where('financial_year', $financialYear)
                 ->exists();
 
-            if (! $exists) {
+            if (!$exists) {
                 BillNoSequence::create([
                     'treasury_id' => $treasury->id,
                     'financial_year' => $financialYear,
@@ -163,7 +165,10 @@ class BillSeeder extends Seeder
         $this->command->info("Generating {$billCount} bills for treasury: {$treasury->name}");
 
         for ($i = 0; $i < $billCount; $i++) {
-            $this->createBill($financialYear, $financialYearString, $treasury, $ddos->random());
+            $bill = $this->createBill($financialYear, $financialYearString, $treasury, $ddos->random());
+
+            // Create payees for this bill
+            $this->createPayeesForBill($bill);
         }
     }
 
@@ -210,6 +215,92 @@ class BillSeeder extends Seeder
     }
 
     /**
+     * Create payees for a bill.
+     */
+    private function createPayeesForBill(Bill $bill): void
+    {
+        // Generate 1-5 payees per bill
+        $payeeCount = rand(1, 5);
+
+        // Calculate individual payee amounts that sum to bill's net amount
+        $remainingAmount = $bill->net_amount;
+
+        for ($i = 0; $i < $payeeCount; $i++) {
+            // Last payee gets the remaining amount
+            if ($i === $payeeCount - 1) {
+                $amount = $remainingAmount;
+            } else {
+                // Random portion of remaining amount (40-70%)
+                $amount = round($remainingAmount * rand(40, 70) / 100, 2);
+                $remainingAmount -= $amount;
+            }
+
+            // Generate unique reg_code for this bill
+            $regCode = $this->generatePayeeRegCode($i);
+
+            // Create payee
+            $payee = Payee::create([
+                'bill_id' => $bill->id,
+                'reg_code' => $regCode,
+                'name' => fake()->name(),
+                'amount' => $amount,
+                'ifsc' => $this->generateIfscCode(),
+                'account_no' => fake()->bankAccountNumber(),
+                'rbi_endtoend_id' => null,
+                'rbi_utr_id' => null,
+                'rbi_utr_date' => null,
+            ]);
+
+            // Add RBI references if bill is old enough (processed)
+            if ($bill->bill_date->lt(now()->subDays(3))) {
+                $payee->update([
+                    'rbi_endtoend_id' => $this->generateRbiEndToEndId(),
+                    'rbi_utr_id' => $this->generateRbiUtrId(),
+                    'rbi_utr_date' => $bill->bill_date->addDays(rand(1, 3)),
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Generate a unique payee registration code.
+     */
+    private function generatePayeeRegCode(int $index): string
+    {
+        $prefixes = ['EMP', 'PEN', 'CON', 'VEN', 'SUP'];
+        $prefix = $prefixes[array_rand($prefixes)];
+
+        return $prefix . '-' . date('Y') . '-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Generate IFSC code.
+     */
+    private function generateIfscCode(): string
+    {
+        $bankCode = strtoupper(Str::random(4));
+        $branchCode = str_pad((string) rand(1, 9999), 6, '0', STR_PAD_LEFT);
+
+        return $bankCode . '0' . $branchCode;
+    }
+
+    /**
+     * Generate RBI end-to-end ID.
+     */
+    private function generateRbiEndToEndId(): string
+    {
+        return 'E2E' . date('Ymd') . strtoupper(Str::random(10));
+    }
+
+    /**
+     * Generate RBI UTR ID.
+     */
+    private function generateRbiUtrId(): string
+    {
+        return 'UTR' . date('Ymd') . strtoupper(Str::random(10));
+    }
+
+    /**
      * Get random date within financial year.
      */
     private function getRandomDateInFinancialYear(FinancialYear $financialYear): Carbon
@@ -230,7 +321,7 @@ class BillSeeder extends Seeder
      */
     private function generateSourceBillId(): string
     {
-        return 'SRC-'.date('Y').'-'.strtoupper(\Str::random(8));
+        return 'SRC-' . date('Y') . '-' . strtoupper(Str::random(8));
     }
 
     /**
