@@ -6,6 +6,7 @@ use App\Filament\Resources\Bills\Pages\CreateBill;
 use App\Filament\Resources\Bills\Pages\EditBill;
 use App\Filament\Resources\Bills\Pages\ListBills;
 use App\Filament\Resources\Bills\Pages\ViewBill;
+use App\Filament\Resources\Bills\RelationManagers\GrossesRelationManager;
 use App\Filament\Resources\Bills\Schemas\BillForm;
 use App\Filament\Resources\Bills\Schemas\BillInfolist;
 use App\Filament\Resources\Bills\Tables\BillsTable;
@@ -47,7 +48,8 @@ class BillResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PayeesRelationManager::class
+            RelationManagers\PayeesRelationManager::class,
+            RelationManagers\GrossesRelationManager::class,
         ];
     }
 
