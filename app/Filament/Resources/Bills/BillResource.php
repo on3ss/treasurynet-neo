@@ -17,12 +17,15 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class BillResource extends Resource
 {
     protected static ?string $model = Bill::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Operations';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentCurrencyRupee;
 
     protected static ?string $recordTitleAttribute = 'bill_number';
 
