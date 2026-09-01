@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Bills\Schemas;
 
 use App\Filament\Entry\MoneyEntry;
 use App\Models\Bill;
-use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -65,10 +64,10 @@ class BillInfolist
                                     ->label('Source')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn (Bill $bill) => $bill->source?->label() ?? '-'
+                                        fn(Bill $bill) => $bill->source?->label() ?? '-'
                                     )
                                     ->color(
-                                        fn (Bill $bill) => $bill->source?->color() ?? 'gray'
+                                        fn(Bill $bill) => $bill->source?->color() ?? 'gray'
                                     )
                                     ->columnSpan(2),
 
@@ -76,10 +75,10 @@ class BillInfolist
                                     ->label('Category')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn (Bill $bill) => $bill->category?->label() ?? '-'
+                                        fn(Bill $bill) => $bill->category?->label() ?? '-'
                                     )
                                     ->color(
-                                        fn (Bill $bill) => $bill->category?->color() ?? 'gray'
+                                        fn(Bill $bill) => $bill->category?->color() ?? 'gray'
                                     )
                                     ->columnSpan(2),
                             ]),
@@ -140,15 +139,21 @@ class BillInfolist
                                     ->label('Payment type')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn (Bill $bill) => $bill->payment_type?->label() ?? '-'
+                                        fn(Bill $bill) => $bill->payment_type?->label() ?? '-'
                                     )
                                     ->color(
-                                        fn (Bill $bill) => $bill->payment_type?->color() ?? 'gray'
+                                        fn(Bill $bill) => $bill->payment_type?->color() ?? 'gray'
                                     ),
 
-                                IconEntry::make('is_urgent')
-                                    ->label('Urgent')
-                                    ->boolean(),
+                                TextEntry::make('is_urgent')
+                                    ->label('Urgency')
+                                    ->badge()
+                                    ->formatStateUsing(
+                                        fn(bool $state): string => $state ? 'Urgent' : 'Normal'
+                                    )
+                                    ->color(
+                                        fn(bool $state): string => $state ? 'danger' : 'gray'
+                                    ),
                             ]),
                     ]),
             ]);
