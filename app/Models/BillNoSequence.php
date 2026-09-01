@@ -7,19 +7,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BillNoSequence extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'treasury_id',
         'financial_year',
         'last_sequence_no',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'last_sequence_no' => 'integer',
         'treasury_id' => 'integer',
     ];
 
     /**
-     * Get the treasury that owns the bill number sequence.
+     * Relationships
      */
     public function treasury(): BelongsTo
     {
@@ -27,7 +37,7 @@ class BillNoSequence extends Model
     }
 
     /**
-     * Scope query to find sequence by treasury and financial year.
+     * Scopes
      */
     public function scopeForTreasuryAndYear($query, int $treasuryId, string $financialYear)
     {

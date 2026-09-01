@@ -39,7 +39,7 @@ class Payee extends Model
     ];
 
     /**
-     * Get the bill that owns the payee.
+     * Relationships
      */
     public function bill(): BelongsTo
     {

@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BillType extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'detail_head_id',
         'code',
@@ -17,15 +23,15 @@ class BillType extends Model
     ];
 
     /**
-     * Get the detail head that owns the bill type.
+     * Relationships
      */
-    public function detailHead()
+    public function detailHead(): BelongsTo
     {
         return $this->belongsTo(DetailHead::class);
     }
 
     /**
-     * Scope a query to only include bill types for AC heads.
+     * Scopes
      */
     public function scopeForAcHeads($query)
     {
@@ -34,9 +40,6 @@ class BillType extends Model
         });
     }
 
-    /**
-     * Scope a query to only include bill types for DC heads.
-     */
     public function scopeForDcHeads($query)
     {
         return $query->whereHas('detailHead', function ($q) {
@@ -44,17 +47,16 @@ class BillType extends Model
         });
     }
 
-    /**
-     * Scope a query to search by description or code.
-     */
     public function scopeSearch($query, string $search)
     {
-        return $query->where('description', 'like', "%{$search}%")
-            ->orWhere('code', 'like', "%{$search}%");
+        return $query->where(function ($q) use ($search) {
+            $q->where('description', 'like', "%{$search}%")
+                ->orWhere('code', 'like', "%{$search}%");
+        });
     }
 
     /**
-     * Get the bill type with description.
+     * Accessors & Mutators
      */
     public function getCodeWithDescriptionAttribute(): string
     {
@@ -63,6 +65,8 @@ class BillType extends Model
 
     protected function displayName(): Attribute
     {
-        return Attribute::make(get: fn (mixed $value, array $attributes) => $attributes['code'].' - '.$attributes['description']);
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['description']
+        );
     }
 }

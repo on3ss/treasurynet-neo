@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\SubDetailHeadFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,9 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubDetailHead extends Model
 {
-    /** @use HasFactory<SubDetailHeadFactory> */
+    /** @use HasFactory<\Database\Factories\SubDetailHeadFactory> */
     use HasFactory, SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'detail_head_id',
         'code',
@@ -20,7 +24,16 @@ class SubDetailHead extends Model
     ];
 
     /**
-     * Get the detail head that owns this sub detail head.
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        //
+    ];
+
+    /**
+     * Relationships
      */
     public function detailHead(): BelongsTo
     {
@@ -28,18 +41,18 @@ class SubDetailHead extends Model
     }
 
     /**
-     * Get the full code by combining detail head code with sub detail head code.
-     */
-    public function getFullCodeAttribute(): string
-    {
-        return $this->detailHead->code.$this->code;
-    }
-
-    /**
-     * Scope a query to only include sub detail heads for a specific detail head.
+     * Scopes
      */
     public function scopeForDetailHead($query, $detailHeadId)
     {
         return $query->where('detail_head_id', $detailHeadId);
+    }
+
+    /**
+     * Accessors & Mutators
+     */
+    public function getFullCodeAttribute(): string
+    {
+        return $this->detailHead->code . $this->code;
     }
 }

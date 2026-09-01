@@ -37,59 +37,20 @@ class FinancialYear extends Model
     ];
 
     /**
-     * Scope a query to only include active financial years.
+     * Scopes
      */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope a query to only include the current financial year.
-     */
     public function scopeCurrent($query)
     {
         return $query->where('is_current', true);
     }
 
     /**
-     * Get the current financial year.
-     */
-    public static function getCurrent(): ?self
-    {
-        return static::current()->first();
-    }
-
-    /**
-     * Get the current financial year based on today's date.
-     */
-    public static function getCurrentByDate(): ?self
-    {
-        $now = Carbon::now();
-        $currentFYStart = $now->month >= 4 ? $now->year : $now->year - 1;
-        $name = $currentFYStart.'-'.($currentFYStart + 1);
-
-        return static::where('name', $name)->first();
-    }
-
-    /**
-     * Check if this financial year is current.
-     */
-    public function isCurrent(): bool
-    {
-        return $this->is_current;
-    }
-
-    /**
-     * Check if this financial year is active.
-     */
-    public function isActive(): bool
-    {
-        return $this->is_active;
-    }
-
-    /**
-     * Get formatted date range.
+     * Accessors & Mutators
      */
     public function getDateRangeAttribute(): string
     {
@@ -99,12 +60,36 @@ class FinancialYear extends Model
         /** @var Carbon $endDate */
         $endDate = $this->end_date;
 
-        return $startDate->format('d-m-Y').' to '.$endDate->format('d-m-Y');
+        return $startDate->format('d-m-Y') . ' to ' . $endDate->format('d-m-Y');
     }
 
     /**
-     * Set this financial year as current.
+     * Helper Methods
      */
+    public static function getCurrent(): ?self
+    {
+        return static::current()->first();
+    }
+
+    public static function getCurrentByDate(): ?self
+    {
+        $now = Carbon::now();
+        $currentFYStart = $now->month >= 4 ? $now->year : $now->year - 1;
+        $name = $currentFYStart . '-' . ($currentFYStart + 1);
+
+        return static::where('name', $name)->first();
+    }
+
+    public function isCurrent(): bool
+    {
+        return $this->is_current;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->is_active;
+    }
+
     public function setAsCurrent(): bool
     {
         static::query()->update(['is_current' => false]);

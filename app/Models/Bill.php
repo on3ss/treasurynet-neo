@@ -15,6 +15,11 @@ class Bill extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'financial_year_id',
         'treasury_id',
@@ -34,6 +39,11 @@ class Bill extends Model
         'payment_type',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'bill_date' => 'datetime',
         'net_amount' => 'decimal:2',
@@ -43,14 +53,6 @@ class Bill extends Model
         'category' => BillCategory::class,
         'payment_type' => PaymentType::class,
     ];
-
-    /**
-     * Get formatted bill number with leading zeros
-     */
-    public function getFormattedBillNumberAttribute(): string
-    {
-        return str_pad($this->bill_number, 6, '0', STR_PAD_LEFT);
-    }
 
     /**
      * Relationships
@@ -95,9 +97,6 @@ class Bill extends Model
         return $this->hasMany(Payee::class);
     }
 
-    /**
-     * Get the grosses for this bill.
-     */
     public function grosses(): HasMany
     {
         return $this->hasMany(Gross::class);
@@ -109,33 +108,35 @@ class Bill extends Model
     }
 
     /**
-     * Get the total gross amount for this bill.
-     */
-    public function getTotalGrossAmountAttribute(): float
-    {
-        return $this->grosses()->sum('amount');
-    }
-
-    /**
-     * Scope for urgent bills
+     * Scopes
      */
     public function scopeUrgent($query)
     {
         return $query->where('is_urgent', true);
     }
 
-    /**
-     * Scope for electronic payments
-     */
     public function scopeElectronicPayment($query)
     {
         return $query->where('payment_type', PaymentType::ELECTRONIC);
     }
 
+    /**
+     * Accessors & Mutators
+     */
+    public function getFormattedBillNumberAttribute(): string
+    {
+        return str_pad($this->bill_number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function getTotalGrossAmountAttribute(): float
+    {
+        return $this->grosses()->sum('amount');
+    }
+
     protected function displayName(): Attribute
     {
         return Attribute::make(
-            get: fn (): string => sprintf(
+            get: fn(): string => sprintf(
                 '%s/%s/%s',
                 $this->financialYear?->name ?? '-',
                 $this->treasury?->code ?? '-',

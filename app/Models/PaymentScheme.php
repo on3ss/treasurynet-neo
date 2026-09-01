@@ -13,6 +13,11 @@ class PaymentScheme extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'demand_number',
         'major_head',
@@ -26,8 +31,22 @@ class PaymentScheme extends Model
         'sector_code',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        //
+    ];
+
+    /**
+     * Accessors & Mutators
+     */
     protected function displayName(): Attribute
     {
-        return Attribute::make(get: fn (mixed $value, array $attributes) => $attributes['code'].' - '.$attributes['description']);
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['description']
+        );
     }
 }

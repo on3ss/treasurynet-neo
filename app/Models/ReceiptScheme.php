@@ -12,6 +12,11 @@ class ReceiptScheme extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'major_head',
         'submajor_head',
@@ -21,5 +26,14 @@ class ReceiptScheme extends Model
         'code',
         'description',
         'sector_code',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        //
     ];
 }

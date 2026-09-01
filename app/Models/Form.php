@@ -3,12 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Form extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'detail_head_id',
         'bill_type_id',
@@ -16,47 +22,38 @@ class Form extends Model
     ];
 
     /**
-     * Get the detail head that owns the form.
+     * Relationships
      */
-    public function detailHead()
+    public function detailHead(): BelongsTo
     {
         return $this->belongsTo(DetailHead::class);
     }
 
-    /**
-     * Get the bill type that owns the form.
-     */
-    public function billType()
+    public function billType(): BelongsTo
     {
         return $this->belongsTo(BillType::class);
     }
 
     /**
-     * Scope a query to only include forms for a specific detail head.
+     * Scopes
      */
     public function scopeForDetailHead($query, $detailHeadId)
     {
         return $query->where('detail_head_id', $detailHeadId);
     }
 
-    /**
-     * Scope a query to only include forms for a specific bill type.
-     */
     public function scopeForBillType($query, $billTypeId)
     {
         return $query->where('bill_type_id', $billTypeId);
     }
 
-    /**
-     * Scope a query to search by name.
-     */
     public function scopeSearch($query, string $search)
     {
         return $query->where('name', 'like', "%{$search}%");
     }
 
     /**
-     * Get the form with full details.
+     * Accessors & Mutators
      */
     public function getFullNameAttribute(): string
     {

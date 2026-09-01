@@ -33,63 +33,51 @@ class Treasury extends Model
     ];
 
     /**
-     * Get the bill number sequences for the treasury.
+     * Relationships
      */
     public function billNoSequences(): HasMany
     {
         return $this->hasMany(BillNoSequence::class);
     }
 
-    /**
-     * Get the bills for the treasury.
-     */
     public function bills(): HasMany
     {
         return $this->hasMany(Bill::class);
     }
 
     /**
-     * Scope a query to only include active treasuries.
+     * Scopes
      */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope a query to only include inactive treasuries.
-     */
     public function scopeInactive($query)
     {
         return $query->where('is_active', false);
     }
 
     /**
-     * Check if the treasury is active.
+     * Helper Methods
      */
     public function isActive(): bool
     {
         return $this->is_active;
     }
 
-    /**
-     * Activate the treasury.
-     */
     public function activate(): bool
     {
         return $this->update(['is_active' => true]);
     }
 
-    /**
-     * Deactivate the treasury.
-     */
     public function deactivate(): bool
     {
         return $this->update(['is_active' => false]);
     }
 
     /**
-     * Get formatted treasury name with code.
+     * Accessors & Mutators
      */
     public function getFormattedNameAttribute(): string
     {
@@ -98,6 +86,8 @@ class Treasury extends Model
 
     protected function displayName(): Attribute
     {
-        return Attribute::make(get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['name']);
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['name']
+        );
     }
 }

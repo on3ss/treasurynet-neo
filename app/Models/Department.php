@@ -10,6 +10,11 @@ class Department extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = ['code', 'name'];
 
     /**
@@ -35,24 +40,18 @@ class Department extends Model
     }
 
     /**
-     * Scope a query to only include active departments.
+     * Scopes
      */
     public function scopeActive(Builder $query): Builder
     {
         return $query->whereNull('deleted_at');
     }
 
-    /**
-     * Scope a query to only include trashed departments.
-     */
     public function scopeInactive(Builder $query): Builder
     {
         return $query->whereNotNull('deleted_at');
     }
 
-    /**
-     * Scope a query to search by name or code.
-     */
     public function scopeSearch(Builder $query, string $search): Builder
     {
         return $query->where(function ($q) use ($search) {
@@ -62,7 +61,7 @@ class Department extends Model
     }
 
     /**
-     * Get formatted code (always with leading zero).
+     * Accessors & Mutators
      */
     public function getFormattedCodeAttribute(): string
     {
@@ -70,7 +69,7 @@ class Department extends Model
     }
 
     /**
-     * Find department by code (accepts both '5' and '05').
+     * Helper Methods
      */
     public static function findByCode(string $code): ?self
     {
