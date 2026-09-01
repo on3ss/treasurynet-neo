@@ -9,10 +9,12 @@ use App\Models\BillType;
 use App\Models\Ddo;
 use App\Models\DetailHead;
 use App\Models\PaymentScheme;
+use App\Models\Treasury;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -22,11 +24,20 @@ class BillForm
     {
         return $schema
             ->components([
-                self::billInformation(),
+                Grid::make()
+                    ->columnSpanFull()
+                    ->columns([
+                        'xs' => 1,
+                        '2xl' => 2,
+                    ])
+                    ->schema([
+                        self::billInformation(),
 
-                self::administrativeInformation(),
+                        self::administrativeInformation(),
 
-                self::financialInformation(),
+                        self::financialInformation()
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -97,7 +108,10 @@ class BillForm
             ->schema([
                 Select::make('treasury_id')
                     ->label('Treasury')
-                    ->relationship('treasury', 'name')
+                    ->relationship('treasury', 'id')
+                    ->getOptionLabelFromRecordUsing(
+                        fn(Treasury $record): string => $record->display_name
+                    )
                     ->searchable()
                     ->native(false)
                     ->required(),
