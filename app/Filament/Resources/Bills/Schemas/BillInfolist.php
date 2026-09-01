@@ -36,17 +36,17 @@ class BillInfolist
                             ->schema([
                                 // Row 1
                                 TextEntry::make('financialYear.name')
-                                    ->label('Financial year'),
-
-                                TextEntry::make('bill_number')
-                                    ->label('Bill number'),
+                                    ->label('Financial year')
+                                    ->columnSpan(1),
 
                                 TextEntry::make('bill_date')
                                     ->label('Bill date')
-                                    ->date(),
+                                    ->date()
+                                    ->columnSpan(1),
 
                                 TextEntry::make('form.name')
-                                    ->label('Form'),
+                                    ->label('Form')
+                                    ->columnSpan(2),
 
                                 // Row 2
                                 TextEntry::make('billType.display_name')

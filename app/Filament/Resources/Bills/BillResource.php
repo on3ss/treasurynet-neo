@@ -27,7 +27,7 @@ class BillResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentCurrencyRupee;
 
-    protected static ?string $recordTitleAttribute = 'bill_number';
+    protected static ?string $recordTitleAttribute = 'display_name';
 
     public static function form(Schema $schema): Schema
     {

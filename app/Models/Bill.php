@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\BillCategory;
 use App\Enums\BillSource;
 use App\Enums\PaymentType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -129,5 +130,17 @@ class Bill extends Model
     public function scopeElectronicPayment($query)
     {
         return $query->where('payment_type', PaymentType::ELECTRONIC);
+    }
+
+    protected function displayName(): Attribute
+    {
+        return Attribute::make(
+            get: fn(): string => sprintf(
+                '%s/%s/%s',
+                $this->financialYear?->name ?? '-',
+                $this->treasury?->code ?? '-',
+                $this->bill_number ?? '-',
+            ),
+        );
     }
 }
