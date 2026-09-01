@@ -136,7 +136,7 @@ class Bill extends Model
     protected function displayName(): Attribute
     {
         return Attribute::make(
-            get: fn(): string => sprintf(
+            get: fn (): string => sprintf(
                 '%s/%s/%s',
                 $this->financialYear?->name ?? '-',
                 $this->treasury?->code ?? '-',

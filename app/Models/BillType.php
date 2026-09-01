@@ -66,7 +66,7 @@ class BillType extends Model
     protected function displayName(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['description']
+            get: fn (mixed $value, array $attributes) => $attributes['code'].' - '.$attributes['description']
         );
     }
 }

@@ -71,7 +71,7 @@ class BillForm
                     ->label('Bill type')
                     ->relationship('billType', 'description')
                     ->getOptionLabelFromRecordUsing(
-                        fn(BillType $record): string => $record->display_name
+                        fn (BillType $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
@@ -110,7 +110,7 @@ class BillForm
                     ->label('Treasury')
                     ->relationship('treasury', 'id')
                     ->getOptionLabelFromRecordUsing(
-                        fn(Treasury $record): string => $record->display_name
+                        fn (Treasury $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
@@ -120,7 +120,7 @@ class BillForm
                     ->label('DDO')
                     ->relationship('ddo', 'id')
                     ->getOptionLabelFromRecordUsing(
-                        fn(Ddo $record): string => $record->display_name
+                        fn (Ddo $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
@@ -130,7 +130,7 @@ class BillForm
                     ->label('Detail head')
                     ->relationship('detailHead', 'id')
                     ->getOptionLabelFromRecordUsing(
-                        fn(DetailHead $record): string => $record->display_name
+                        fn (DetailHead $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
@@ -140,7 +140,7 @@ class BillForm
                     ->label('Payment scheme')
                     ->relationship('paymentScheme', 'id')
                     ->getOptionLabelFromRecordUsing(
-                        fn(PaymentScheme $record): string => $record->display_name
+                        fn (PaymentScheme $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
