@@ -22,10 +22,6 @@ class BillInfolist
                         'xl' => 2,
                     ])
                     ->schema([
-
-                        /*
-                         * Bill Information
-                         */
                         Section::make('Bill Information')
                             ->icon('heroicon-o-document-text')
                             ->columns([
@@ -34,7 +30,6 @@ class BillInfolist
                                 'xl' => 4,
                             ])
                             ->schema([
-                                // Row 1
                                 TextEntry::make('financialYear.name')
                                     ->label('Financial year')
                                     ->columnSpan(1),
@@ -48,7 +43,6 @@ class BillInfolist
                                     ->label('Form')
                                     ->columnSpan(2),
 
-                                // Row 2
                                 TextEntry::make('billType.display_name')
                                     ->label('Bill type')
                                     ->placeholder('-')
@@ -59,15 +53,14 @@ class BillInfolist
                                     ->placeholder('-')
                                     ->columnSpan(2),
 
-                                // Row 3
                                 TextEntry::make('source')
                                     ->label('Source')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn(Bill $bill) => $bill->source?->label() ?? '-'
+                                        fn (Bill $bill) => $bill->source?->label() ?? '-'
                                     )
                                     ->color(
-                                        fn(Bill $bill) => $bill->source?->color() ?? 'gray'
+                                        fn (Bill $bill) => $bill->source?->color() ?? 'gray'
                                     )
                                     ->columnSpan(2),
 
@@ -75,17 +68,14 @@ class BillInfolist
                                     ->label('Category')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn(Bill $bill) => $bill->category?->label() ?? '-'
+                                        fn (Bill $bill) => $bill->category?->label() ?? '-'
                                     )
                                     ->color(
-                                        fn(Bill $bill) => $bill->category?->color() ?? 'gray'
+                                        fn (Bill $bill) => $bill->category?->color() ?? 'gray'
                                     )
                                     ->columnSpan(2),
                             ]),
 
-                        /*
-                         * Administrative & Accounting
-                         */
                         Section::make('Administrative & Accounting')
                             ->icon('heroicon-o-building-office-2')
                             ->columns([
@@ -94,7 +84,6 @@ class BillInfolist
                                 'xl' => 4,
                             ])
                             ->schema([
-                                // Row 1
                                 TextEntry::make('treasury.name')
                                     ->label('Treasury')
                                     ->placeholder('-')
@@ -105,22 +94,17 @@ class BillInfolist
                                     ->placeholder('-')
                                     ->columnSpan(2),
 
-                                // Row 2
                                 TextEntry::make('detailHead.display_name')
                                     ->label('Detail head')
                                     ->placeholder('-')
                                     ->columnSpanFull(),
 
-                                // Row 3
                                 TextEntry::make('paymentScheme.display_name')
                                     ->label('Payment scheme')
                                     ->placeholder('-')
                                     ->columnSpanFull(),
                             ]),
 
-                        /*
-                         * Financial Information
-                         */
                         Section::make('Financial Information')
                             ->icon('heroicon-o-banknotes')
                             ->columnSpanFull()
@@ -139,20 +123,20 @@ class BillInfolist
                                     ->label('Payment type')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn(Bill $bill) => $bill->payment_type?->label() ?? '-'
+                                        fn (Bill $bill) => $bill->payment_type?->label() ?? '-'
                                     )
                                     ->color(
-                                        fn(Bill $bill) => $bill->payment_type?->color() ?? 'gray'
+                                        fn (Bill $bill) => $bill->payment_type?->color() ?? 'gray'
                                     ),
 
                                 TextEntry::make('is_urgent')
                                     ->label('Urgency')
                                     ->badge()
                                     ->formatStateUsing(
-                                        fn(bool $state): string => $state ? 'Urgent' : 'Normal'
+                                        fn (bool $state): string => $state ? 'Urgent' : 'Normal'
                                     )
                                     ->color(
-                                        fn(bool $state): string => $state ? 'danger' : 'gray'
+                                        fn (bool $state): string => $state ? 'danger' : 'gray'
                                     ),
                             ]),
                     ]),
