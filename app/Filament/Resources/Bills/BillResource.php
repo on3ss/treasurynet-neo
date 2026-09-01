@@ -70,4 +70,18 @@ class BillResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'financialYear',
+                'treasury',
+                'ddo',
+                'paymentScheme',
+                'detailHead',
+                'billType',
+                'form',
+            ]);
+    }
 }
