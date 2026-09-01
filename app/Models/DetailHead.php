@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -128,5 +129,10 @@ class DetailHead extends Model
     public function getApplicableDeductions(): array
     {
         return $this->deduction_applicability ?? [];
+    }
+
+    protected function displayName(): Attribute
+    {
+        return Attribute::make(get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['description']);
     }
 }

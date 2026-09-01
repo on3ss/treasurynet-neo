@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DDOType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,5 +41,10 @@ class Ddo extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    protected function displayName(): Attribute
+    {
+        return Attribute::make(get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['designation']);
     }
 }

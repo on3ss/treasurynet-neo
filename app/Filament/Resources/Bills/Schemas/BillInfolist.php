@@ -6,6 +6,8 @@ use App\Filament\Entry\MoneyEntry;
 use App\Models\Bill;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class BillInfolist
@@ -14,56 +16,143 @@ class BillInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('financialYear.name')
-                    ->label('Financial year'),
-                TextEntry::make('treasury.name')
-                    ->label('Treasury'),
-                TextEntry::make('ddo.id')
-                    ->label('DDO')
-                    ->formatStateUsing(fn(Bill $bill) => $bill->ddo->code . ' - ' . $bill->ddo->designation),
-                TextEntry::make('paymentScheme.id')
-                    ->label('Payment scheme')
-                    ->formatStateUsing(fn(Bill $bill) => $bill->paymentScheme->code . ' - ' . $bill->paymentScheme->description),
-                TextEntry::make('detailHead.id')
-                    ->label('Detail head')
-                    ->formatStateUsing(fn(Bill $bill) => $bill->detailHead->code . ' - ' . $bill->detailHead->description),
-                TextEntry::make('billType.id')
-                    ->label('Bill type')
-                    ->formatStateUsing(fn(Bill $bill) => $bill->billType->code . ' - ' . $bill->billType->description),
-                TextEntry::make('form.name')
-                    ->label('Form'),
-                TextEntry::make('bill_number')
-                    ->numeric(),
-                TextEntry::make('source_bill_id')
-                    ->label('Source bill ID')
-                    ->placeholder('-'),
-                TextEntry::make('bill_date')
-                    ->date(),
-                TextEntry::make('source')
-                    ->badge()
-                    ->formatStateUsing(fn(Bill $bill) => $bill->source->label())
-                    ->color(fn(Bill $bill) => $bill->source->color()),
-                TextEntry::make('category')
-                    ->badge()
-                    ->formatStateUsing(fn(Bill $bill) => $bill->category->label())
-                    ->color(fn(Bill $bill) => $bill->category->color()),
-                MoneyEntry::make('net_amount'),
-                MoneyEntry::make('gross_amount'),
-                IconEntry::make('is_urgent')
-                    ->boolean(),
-                TextEntry::make('payment_type')
-                    ->badge()
-                    ->formatStateUsing(fn(Bill $bill) => $bill->payment_type->label())
-                    ->color(fn(Bill $bill) => $bill->payment_type->color()),
-                TextEntry::make('created_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('deleted_at')
-                    ->dateTime()
-                    ->visible(fn(Bill $record): bool => $record->trashed()),
+                Grid::make()
+                    ->columnSpanFull()
+                    ->columns([
+                        'default' => 1,
+                        'xl' => 2,
+                    ])
+                    ->schema([
+
+                        /*
+                         * Bill Information
+                         */
+                        Section::make('Bill Information')
+                            ->icon('heroicon-o-document-text')
+                            ->columns([
+                                'default' => 1,
+                                'md' => 2,
+                                'xl' => 4,
+                            ])
+                            ->schema([
+                                // Row 1
+                                TextEntry::make('financialYear.name')
+                                    ->label('Financial year'),
+
+                                TextEntry::make('bill_number')
+                                    ->label('Bill number'),
+
+                                TextEntry::make('bill_date')
+                                    ->label('Bill date')
+                                    ->date(),
+
+                                TextEntry::make('form.name')
+                                    ->label('Form'),
+
+                                // Row 2
+                                TextEntry::make('billType.display_name')
+                                    ->label('Bill type')
+                                    ->placeholder('-')
+                                    ->columnSpan(2),
+
+                                TextEntry::make('source_bill_id')
+                                    ->label('Source bill ID')
+                                    ->placeholder('-')
+                                    ->columnSpan(2),
+
+                                // Row 3
+                                TextEntry::make('source')
+                                    ->label('Source')
+                                    ->badge()
+                                    ->formatStateUsing(
+                                        fn(Bill $bill) => $bill->source?->label() ?? '-'
+                                    )
+                                    ->color(
+                                        fn(Bill $bill) => $bill->source?->color() ?? 'gray'
+                                    )
+                                    ->columnSpan(2),
+
+                                TextEntry::make('category')
+                                    ->label('Category')
+                                    ->badge()
+                                    ->formatStateUsing(
+                                        fn(Bill $bill) => $bill->category?->label() ?? '-'
+                                    )
+                                    ->color(
+                                        fn(Bill $bill) => $bill->category?->color() ?? 'gray'
+                                    )
+                                    ->columnSpan(2),
+                            ]),
+
+                        /*
+                         * Administrative & Accounting
+                         */
+                        Section::make('Administrative & Accounting')
+                            ->icon('heroicon-o-building-office-2')
+                            ->columns([
+                                'default' => 1,
+                                'md' => 2,
+                                'xl' => 4,
+                            ])
+                            ->schema([
+                                // Row 1
+                                TextEntry::make('treasury.name')
+                                    ->label('Treasury')
+                                    ->placeholder('-')
+                                    ->columnSpan(2),
+
+                                TextEntry::make('ddo.display_name')
+                                    ->label('DDO')
+                                    ->placeholder('-')
+                                    ->columnSpan(2),
+
+                                // Row 2
+                                TextEntry::make('detailHead.display_name')
+                                    ->label('Detail head')
+                                    ->placeholder('-')
+                                    ->columnSpanFull(),
+
+                                // Row 3
+                                TextEntry::make('paymentScheme.display_name')
+                                    ->label('Payment scheme')
+                                    ->placeholder('-')
+                                    ->columnSpanFull(),
+                            ]),
+
+                        /*
+                         * Financial Information
+                         */
+                        Section::make('Financial Information')
+                            ->icon('heroicon-o-banknotes')
+                            ->columnSpanFull()
+                            ->columns([
+                                'default' => 2,
+                                'md' => 4,
+                            ])
+                            ->schema([
+                                MoneyEntry::make('gross_amount')
+                                    ->label('Gross amount'),
+
+                                MoneyEntry::make('net_amount')
+                                    ->label('Net amount'),
+
+                                TextEntry::make('payment_type')
+                                    ->label('Payment type')
+                                    ->badge()
+                                    ->formatStateUsing(
+                                        fn(Bill $bill) =>
+                                        $bill->payment_type?->label() ?? '-'
+                                    )
+                                    ->color(
+                                        fn(Bill $bill) =>
+                                        $bill->payment_type?->color() ?? 'gray'
+                                    ),
+
+                                IconEntry::make('is_urgent')
+                                    ->label('Urgent')
+                                    ->boolean(),
+                            ]),
+                    ]),
             ]);
     }
 }
