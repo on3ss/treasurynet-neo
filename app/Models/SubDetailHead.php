@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\SubDetailHeadFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubDetailHead extends Model
 {
-    /** @use HasFactory<\Database\Factories\SubDetailHeadFactory> */
+    /** @use HasFactory<SubDetailHeadFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -31,7 +32,7 @@ class SubDetailHead extends Model
      */
     public function getFullCodeAttribute(): string
     {
-        return $this->detailHead->code . $this->code;
+        return $this->detailHead->code.$this->code;
     }
 
     /**

@@ -80,13 +80,13 @@ class PaymentSchemeObserver
      */
     private function generateCode(PaymentScheme $paymentScheme): string
     {
-        return $paymentScheme->demand_number .
-            $paymentScheme->major_head .
-            $paymentScheme->submajor_head .
-            $paymentScheme->minor_head .
-            $paymentScheme->subminor_head .
-            $paymentScheme->sub_head .
-            $paymentScheme->charged_or_voted .
+        return $paymentScheme->demand_number.
+            $paymentScheme->major_head.
+            $paymentScheme->submajor_head.
+            $paymentScheme->minor_head.
+            $paymentScheme->subminor_head.
+            $paymentScheme->sub_head.
+            $paymentScheme->charged_or_voted.
             $paymentScheme->flag;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\GrossFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Gross extends Model
 {
-    /** @use HasFactory<\Database\Factories\GrossFactory> */
+    /** @use HasFactory<GrossFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

@@ -28,6 +28,6 @@ class PaymentScheme extends Model
 
     protected function displayName(): Attribute
     {
-        return Attribute::make(get: fn(mixed $value, array $attributes) => $attributes['code'] . ' - ' . $attributes['description']);
+        return Attribute::make(get: fn (mixed $value, array $attributes) => $attributes['code'].' - '.$attributes['description']);
     }
 }

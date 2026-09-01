@@ -8,7 +8,7 @@ use App\Models\ReceiptScheme;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Deduction>
+ * @extends Factory<Deduction>
  */
 class DeductionFactory extends Factory
 {
@@ -33,7 +33,7 @@ class DeductionFactory extends Factory
      */
     public function forBill(Bill $bill): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'bill_id' => $bill->id,
         ]);
     }
@@ -43,7 +43,7 @@ class DeductionFactory extends Factory
      */
     public function forReceiptScheme(ReceiptScheme $receiptScheme): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'receipt_scheme_id' => $receiptScheme->id,
         ]);
     }

@@ -78,7 +78,7 @@ class PayeesRelationManager extends RelationManager
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn(Payee $record): bool => $record->trashed()),
+                    ->visible(fn (Payee $record): bool => $record->trashed()),
             ]);
     }
 
@@ -140,7 +140,7 @@ class PayeesRelationManager extends RelationManager
                     RestoreBulkAction::make(),
                 ]),
             ])
-            ->modifyQueryUsing(fn(Builder $query) => $query
+            ->modifyQueryUsing(fn (Builder $query) => $query
                 ->withoutGlobalScopes([
                     SoftDeletingScope::class,
                 ]));

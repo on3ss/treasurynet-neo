@@ -72,19 +72,19 @@ class BillsTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('source')
                     ->label(__('Source'))
-                    ->formatStateUsing(fn(Model $model) => $model->source->label())
+                    ->formatStateUsing(fn (Model $model) => $model->source->label())
                     ->badge()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('category')
                     ->label(__('Category'))
-                    ->formatStateUsing(fn(Model $model) => $model->category->label())
+                    ->formatStateUsing(fn (Model $model) => $model->category->label())
                     ->badge()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('payment_type')
                     ->label(__('Payment Type'))
-                    ->formatStateUsing(fn(Model $model) => $model->payment_type->label())
+                    ->formatStateUsing(fn (Model $model) => $model->payment_type->label())
                     ->badge()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),

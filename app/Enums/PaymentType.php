@@ -32,7 +32,7 @@ enum PaymentType: string
     public static function fromValue(string $value): self
     {
         return self::tryFrom($value) ?? throw new \InvalidArgumentException(
-            "Invalid PaymentType value: {$value}. Valid values are: " . implode(', ', self::values())
+            "Invalid PaymentType value: {$value}. Valid values are: ".implode(', ', self::values())
         );
     }
 

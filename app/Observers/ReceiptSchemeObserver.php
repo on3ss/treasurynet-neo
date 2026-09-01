@@ -79,10 +79,10 @@ class ReceiptSchemeObserver
      */
     private function generateCode(ReceiptScheme $receiptScheme): string
     {
-        return $receiptScheme->major_head .
-            $receiptScheme->submajor_head .
-            $receiptScheme->minor_head .
-            $receiptScheme->subminor_head .
+        return $receiptScheme->major_head.
+            $receiptScheme->submajor_head.
+            $receiptScheme->minor_head.
+            $receiptScheme->subminor_head.
             $receiptScheme->sub_head;
     }
 

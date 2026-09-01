@@ -61,7 +61,7 @@ class GrossesRelationManager extends RelationManager
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn(Gross $record): bool => $record->trashed()),
+                    ->visible(fn (Gross $record): bool => $record->trashed()),
             ]);
     }
 
@@ -110,7 +110,7 @@ class GrossesRelationManager extends RelationManager
                     RestoreBulkAction::make(),
                 ]),
             ])
-            ->modifyQueryUsing(fn(Builder $query) => $query
+            ->modifyQueryUsing(fn (Builder $query) => $query
                 ->withoutGlobalScopes([
                     SoftDeletingScope::class,
                 ]));

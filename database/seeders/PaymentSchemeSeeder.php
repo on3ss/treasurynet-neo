@@ -15,7 +15,7 @@ class PaymentSchemeSeeder extends Seeder
     {
         $csvPath = database_path('seeders/data/payment_schemes.csv');
 
-        if (!File::exists($csvPath)) {
+        if (! File::exists($csvPath)) {
             $this->command->error("CSV file not found at: {$csvPath}");
 
             return;
@@ -54,7 +54,7 @@ class PaymentSchemeSeeder extends Seeder
 
         if (($handle = fopen($filePath, 'r')) !== false) {
             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-                if (!$header) {
+                if (! $header) {
                     $header = $row;
 
                     continue;
@@ -109,7 +109,7 @@ class PaymentSchemeSeeder extends Seeder
             if ($this->isValidRow($cleanedRow)) {
                 $cleanedData[] = $cleanedRow;
             } else {
-                $this->command->warn('Skipping invalid row: ' . json_encode($row));
+                $this->command->warn('Skipping invalid row: '.json_encode($row));
             }
         }
 
@@ -121,13 +121,13 @@ class PaymentSchemeSeeder extends Seeder
      */
     private function generateCode(array $row): string
     {
-        return $row['demand_number'] .
-            $row['major_head'] .
-            $row['submajor_head'] .
-            $row['minor_head'] .
-            $row['subminor_head'] .
-            $row['sub_head'] .
-            $row['charged_or_voted'] .
+        return $row['demand_number'].
+            $row['major_head'].
+            $row['submajor_head'].
+            $row['minor_head'].
+            $row['subminor_head'].
+            $row['sub_head'].
+            $row['charged_or_voted'].
             $row['flag'];
     }
 
@@ -210,7 +210,7 @@ class PaymentSchemeSeeder extends Seeder
         }
 
         // Validate charged_or_voted
-        if (!in_array($row['charged_or_voted'], ['V', 'C'])) {
+        if (! in_array($row['charged_or_voted'], ['V', 'C'])) {
             return false;
         }
 

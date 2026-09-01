@@ -34,7 +34,7 @@ enum BillSource: string
     public static function fromValue(string $value): self
     {
         return self::tryFrom($value) ?? throw new \InvalidArgumentException(
-            "Invalid BillSource value: {$value}. Valid values are: " . implode(', ', self::values())
+            "Invalid BillSource value: {$value}. Valid values are: ".implode(', ', self::values())
         );
     }
 

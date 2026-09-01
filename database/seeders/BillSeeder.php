@@ -21,6 +21,7 @@ use App\Models\SubDetailHead;
 use App\Models\Treasury;
 use App\Services\BillNoSequenceService;
 use Carbon\Carbon;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -43,8 +44,9 @@ class BillSeeder extends Seeder
         // Get current financial year
         $currentFinancialYear = $this->getCurrentFinancialYear();
 
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $this->command->error('No financial year found. Please seed financial years first.');
+
             return;
         }
 
@@ -65,26 +67,31 @@ class BillSeeder extends Seeder
         // Validate required data exists
         if ($treasuries->isEmpty()) {
             $this->command->error('No treasuries found. Please seed treasuries first.');
+
             return;
         }
 
         if ($ddos->isEmpty()) {
             $this->command->error('No DDOs found. Please seed DDOs first.');
+
             return;
         }
 
         if ($paymentSchemes->isEmpty()) {
             $this->command->error('No payment schemes found. Please seed payment schemes first.');
+
             return;
         }
 
         if ($receiptSchemes->isEmpty()) {
             $this->command->error('No receipt schemes found. Please seed receipt schemes first.');
+
             return;
         }
 
         if ($detailHeads->isEmpty()) {
             $this->command->error('No detail heads found. Please seed detail heads first.');
+
             return;
         }
 
@@ -125,14 +132,14 @@ class BillSeeder extends Seeder
             ->first();
 
         // If not found, try to find the most recent one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::where('end_date', '>=', $now)
                 ->orderBy('start_date')
                 ->first();
         }
 
         // If still not found, get the latest one
-        if (!$currentFinancialYear) {
+        if (! $currentFinancialYear) {
             $currentFinancialYear = FinancialYear::latest('start_date')->first();
         }
 
@@ -158,7 +165,7 @@ class BillSeeder extends Seeder
         $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
         $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
 
-        return $startYear . '-' . $endYear;
+        return $startYear.'-'.$endYear;
     }
 
     /**
@@ -173,7 +180,7 @@ class BillSeeder extends Seeder
                 ->where('financial_year', $financialYear)
                 ->exists();
 
-            if (!$exists) {
+            if (! $exists) {
                 BillNoSequence::create([
                     'treasury_id' => $treasury->id,
                     'financial_year' => $financialYear,
@@ -240,8 +247,8 @@ class BillSeeder extends Seeder
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error("Failed to seed bills for treasury {$treasury->name}: " . $e->getMessage());
-            Log::error("Bill seeding failed for treasury {$treasury->name}: " . $e->getMessage());
+            $this->command->error("Failed to seed bills for treasury {$treasury->name}: ".$e->getMessage());
+            Log::error("Bill seeding failed for treasury {$treasury->name}: ".$e->getMessage());
         }
 
         return $createdCount;
@@ -308,6 +315,7 @@ class BillSeeder extends Seeder
 
         if ($subDetailHeads->isEmpty()) {
             $this->command->warn("  ⚠ No sub detail heads found. Skipping gross entries for bill {$bill->bill_number}");
+
             return;
         }
 
@@ -446,7 +454,7 @@ class BillSeeder extends Seeder
         $prefixes = ['EMP', 'PEN', 'CON', 'VEN', 'SUP'];
         $prefix = $prefixes[array_rand($prefixes)];
 
-        return $prefix . '-' . $bill->bill_number . '-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
+        return $prefix.'-'.$bill->bill_number.'-'.str_pad($index + 1, 3, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -457,7 +465,7 @@ class BillSeeder extends Seeder
         $bankCode = strtoupper(Str::random(4));
         $branchCode = str_pad((string) rand(1, 9999), 6, '0', STR_PAD_LEFT);
 
-        return $bankCode . '0' . $branchCode;
+        return $bankCode.'0'.$branchCode;
     }
 
     /**
@@ -465,7 +473,7 @@ class BillSeeder extends Seeder
      */
     private function generateRbiEndToEndId(): string
     {
-        return 'E2E' . date('Ymd') . strtoupper(Str::random(10));
+        return 'E2E'.date('Ymd').strtoupper(Str::random(10));
     }
 
     /**
@@ -473,7 +481,7 @@ class BillSeeder extends Seeder
      */
     private function generateRbiUtrId(): string
     {
-        return 'UTR' . date('Ymd') . strtoupper(Str::random(10));
+        return 'UTR'.date('Ymd').strtoupper(Str::random(10));
     }
 
     /**
@@ -488,7 +496,7 @@ class BillSeeder extends Seeder
         $endDate = min($endDate, now());
 
         return Carbon::instance(
-            \Faker\Factory::create()->dateTimeBetween($startDate, $endDate)
+            Factory::create()->dateTimeBetween($startDate, $endDate)
         );
     }
 
@@ -497,7 +505,7 @@ class BillSeeder extends Seeder
      */
     private function generateSourceBillId(): string
     {
-        return 'SRC-' . date('Y') . '-' . strtoupper(Str::random(8));
+        return 'SRC-'.date('Y').'-'.strtoupper(Str::random(8));
     }
 
     /**

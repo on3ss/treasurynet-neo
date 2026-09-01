@@ -17,8 +17,9 @@ class SubDetailHeadSeeder extends Seeder
     {
         $csvPath = database_path('seeders/data/subdetail_heads.csv');
 
-        if (!File::exists($csvPath)) {
+        if (! File::exists($csvPath)) {
             $this->command->error("CSV file not found at: {$csvPath}");
+
             return;
         }
 
@@ -46,17 +47,19 @@ class SubDetailHeadSeeder extends Seeder
 
                 // Skip empty rows
                 if (empty($detailHeadCode) || empty($subDetailHeadCode)) {
-                    $this->command->warn("Skipping row " . ($index + 1) . ": Missing detail head or sub detail head code");
+                    $this->command->warn('Skipping row '.($index + 1).': Missing detail head or sub detail head code');
                     $skippedCount++;
+
                     continue;
                 }
 
                 // Find the detail head by code
                 $detailHead = DetailHead::where('code', $detailHeadCode)->first();
 
-                if (!$detailHead) {
-                    $this->command->warn("Skipping row " . ($index + 1) . ": Detail head code '{$detailHeadCode}' not found");
+                if (! $detailHead) {
+                    $this->command->warn('Skipping row '.($index + 1).": Detail head code '{$detailHeadCode}' not found");
                     $skippedCount++;
+
                     continue;
                 }
 
@@ -90,7 +93,7 @@ class SubDetailHeadSeeder extends Seeder
                     'error' => $e->getMessage(),
                     'data' => $row,
                 ];
-                Log::error("Failed to import sub detail head at row " . ($index + 1) . ": " . $e->getMessage());
+                Log::error('Failed to import sub detail head at row '.($index + 1).': '.$e->getMessage());
             }
         }
 
@@ -99,7 +102,7 @@ class SubDetailHeadSeeder extends Seeder
         $this->command->info("✓ Imported/Updated: {$importedCount} records");
         $this->command->info("✗ Skipped: {$skippedCount} records");
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $this->command->warn("\nErrors encountered:");
             foreach ($errors as $error) {
                 $this->command->error("Row {$error['row']}: {$error['error']}");

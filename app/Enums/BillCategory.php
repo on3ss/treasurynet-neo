@@ -32,7 +32,7 @@ enum BillCategory: string
     public static function fromValue(string $value): self
     {
         return self::tryFrom($value) ?? throw new \InvalidArgumentException(
-            "Invalid BillCategory value: {$value}. Valid values are: " . implode(', ', self::values())
+            "Invalid BillCategory value: {$value}. Valid values are: ".implode(', ', self::values())
         );
     }
 

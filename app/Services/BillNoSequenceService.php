@@ -35,7 +35,7 @@ class BillNoSequenceService
                     ->lockForUpdate()
                     ->first();
 
-                if (!$sequence) {
+                if (! $sequence) {
                     // Create new sequence if it doesn't exist
                     $sequence = BillNoSequence::create([
                         'treasury_id' => $treasuryId,
@@ -81,7 +81,7 @@ class BillNoSequenceService
                 ->lockForUpdate()
                 ->first();
 
-            if (!$sequence) {
+            if (! $sequence) {
                 $sequence = BillNoSequence::create([
                     'treasury_id' => $treasuryId,
                     'financial_year' => $financialYear,
@@ -293,7 +293,7 @@ class BillNoSequenceService
         $count = 0;
 
         foreach ($treasuries as $treasury) {
-            if (!$this->sequenceExists($treasury->id, $financialYear)) {
+            if (! $this->sequenceExists($treasury->id, $financialYear)) {
                 BillNoSequence::create([
                     'treasury_id' => $treasury->id,
                     'financial_year' => $financialYear,
@@ -321,6 +321,6 @@ class BillNoSequenceService
         $startYear = $financialYear->start_date?->format('Y') ?? now()->format('Y');
         $endYear = $financialYear->end_date?->format('Y') ?? (now()->addYear())->format('Y');
 
-        return $startYear . '-' . $endYear;
+        return $startYear.'-'.$endYear;
     }
 }

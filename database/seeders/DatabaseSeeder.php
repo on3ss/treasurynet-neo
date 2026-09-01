@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             SubDetailHeadSeeder::class,
             BillTypeSeeder::class,
             FormSeeder::class,
-            BillSeeder::class
+            BillSeeder::class,
         ]);
     }
 }

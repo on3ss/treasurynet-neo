@@ -16,8 +16,9 @@ class ReceiptSchemeSeeder extends Seeder
     {
         $csvPath = database_path('seeders/data/receipt_schemes.csv');
 
-        if (!File::exists($csvPath)) {
+        if (! File::exists($csvPath)) {
             $this->command->error("CSV file not found at: {$csvPath}");
+
             return;
         }
 
@@ -39,10 +40,10 @@ class ReceiptSchemeSeeder extends Seeder
         foreach ($rows as $index => $row) {
             try {
                 // Calculate the code (this will also be done by observer, but we include it for validation)
-                $expectedCode = $row[$headerMap['major_head']] .
-                    $row[$headerMap['submajor_head']] .
-                    $row[$headerMap['minor_head']] .
-                    $row[$headerMap['subminor_head']] .
+                $expectedCode = $row[$headerMap['major_head']].
+                    $row[$headerMap['submajor_head']].
+                    $row[$headerMap['minor_head']].
+                    $row[$headerMap['subminor_head']].
                     $row[$headerMap['sub_head']];
 
                 // Extract data from CSV
@@ -83,7 +84,7 @@ class ReceiptSchemeSeeder extends Seeder
                     'row' => $index + 1,
                     'error' => $e->getMessage(),
                 ];
-                Log::error("Failed to import receipt scheme at row " . ($index + 1) . ": " . $e->getMessage());
+                Log::error('Failed to import receipt scheme at row '.($index + 1).': '.$e->getMessage());
             }
         }
 
@@ -92,7 +93,7 @@ class ReceiptSchemeSeeder extends Seeder
         $this->command->info("✓ Imported/Updated: {$importedCount} records");
         $this->command->info("✗ Skipped: {$skippedCount} records");
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $this->command->warn("\nErrors encountered:");
             foreach ($errors as $error) {
                 $this->command->error("Row {$error['row']}: {$error['error']}");
