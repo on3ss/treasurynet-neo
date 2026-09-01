@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Bills\Schemas;
 
+use App\Filament\Entry\MoneyEntry;
 use App\Models\Bill;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -18,33 +19,42 @@ class BillInfolist
                 TextEntry::make('treasury.name')
                     ->label('Treasury'),
                 TextEntry::make('ddo.id')
-                    ->label('Ddo'),
+                    ->label('DDO')
+                    ->formatStateUsing(fn(Bill $bill) => $bill->ddo->code . ' - ' . $bill->ddo->designation),
                 TextEntry::make('paymentScheme.id')
-                    ->label('Payment scheme'),
+                    ->label('Payment scheme')
+                    ->formatStateUsing(fn(Bill $bill) => $bill->paymentScheme->code . ' - ' . $bill->paymentScheme->description),
                 TextEntry::make('detailHead.id')
-                    ->label('Detail head'),
+                    ->label('Detail head')
+                    ->formatStateUsing(fn(Bill $bill) => $bill->detailHead->code . ' - ' . $bill->detailHead->description),
                 TextEntry::make('billType.id')
-                    ->label('Bill type'),
+                    ->label('Bill type')
+                    ->formatStateUsing(fn(Bill $bill) => $bill->billType->code . ' - ' . $bill->billType->description),
                 TextEntry::make('form.name')
                     ->label('Form'),
                 TextEntry::make('bill_number')
                     ->numeric(),
                 TextEntry::make('source_bill_id')
+                    ->label('Source bill ID')
                     ->placeholder('-'),
                 TextEntry::make('bill_date')
-                    ->dateTime(),
+                    ->date(),
                 TextEntry::make('source')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn(Bill $bill) => $bill->source->label())
+                    ->color(fn(Bill $bill) => $bill->source->color()),
                 TextEntry::make('category')
-                    ->badge(),
-                TextEntry::make('net_amount')
-                    ->numeric(),
-                TextEntry::make('gross_amount')
-                    ->numeric(),
+                    ->badge()
+                    ->formatStateUsing(fn(Bill $bill) => $bill->category->label())
+                    ->color(fn(Bill $bill) => $bill->category->color()),
+                MoneyEntry::make('net_amount'),
+                MoneyEntry::make('gross_amount'),
                 IconEntry::make('is_urgent')
                     ->boolean(),
                 TextEntry::make('payment_type')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn(Bill $bill) => $bill->payment_type->label())
+                    ->color(fn(Bill $bill) => $bill->payment_type->color()),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),
@@ -53,7 +63,7 @@ class BillInfolist
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->visible(fn (Bill $record): bool => $record->trashed()),
+                    ->visible(fn(Bill $record): bool => $record->trashed()),
             ]);
     }
 }

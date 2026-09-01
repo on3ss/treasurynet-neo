@@ -32,18 +32,18 @@ enum PaymentType: string
     public static function fromValue(string $value): self
     {
         return self::tryFrom($value) ?? throw new \InvalidArgumentException(
-            "Invalid PaymentType value: {$value}. Valid values are: ".implode(', ', self::values())
+            "Invalid PaymentType value: {$value}. Valid values are: " . implode(', ', self::values())
         );
     }
 
     /**
      * Get color class for UI
      */
-    public function colorClass(): string
+    public function color(): string
     {
         return match ($this) {
-            self::ELECTRONIC => 'bg-blue-100 text-blue-800',
-            self::CASH => 'bg-yellow-100 text-yellow-800',
+            self::ELECTRONIC => 'primary',
+            self::CASH => 'warning',
         };
     }
 

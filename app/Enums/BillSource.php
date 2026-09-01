@@ -34,31 +34,19 @@ enum BillSource: string
     public static function fromValue(string $value): self
     {
         return self::tryFrom($value) ?? throw new \InvalidArgumentException(
-            "Invalid BillSource value: {$value}. Valid values are: ".implode(', ', self::values())
+            "Invalid BillSource value: {$value}. Valid values are: " . implode(', ', self::values())
         );
     }
 
     /**
      * Get color class for UI
      */
-    public function colorClass(): string
+    public function color(): string
     {
         return match ($this) {
-            self::EBILLING => 'bg-blue-100 text-blue-800',
-            self::EIS => 'bg-green-100 text-green-800',
-            self::PENSION => 'bg-purple-100 text-purple-800',
-        };
-    }
-
-    /**
-     * Get icon for UI
-     */
-    public function icon(): string
-    {
-        return match ($this) {
-            self::EBILLING => 'heroicon-o-document-text',
-            self::EIS => 'heroicon-o-cpu-chip',
-            self::PENSION => 'heroicon-o-user-group',
+            self::EBILLING => 'primary',
+            self::EIS => 'warning',
+            self::PENSION => 'success',
         };
     }
 
