@@ -13,6 +13,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use UnitEnum;
 
 class BillForm
 {
@@ -77,13 +78,13 @@ class BillForm
 
                 Select::make('source')
                     ->label('Source')
-                    ->options(BillSource::class)
+                    ->options(self::getEnumOptions(BillSource::class))
                     ->native(false)
                     ->required(),
 
                 Select::make('category')
                     ->label('Category')
-                    ->options(BillCategory::class)
+                    ->options(self::getEnumOptions(BillCategory::class))
                     ->native(false)
                     ->required(),
             ]);
@@ -146,7 +147,7 @@ class BillForm
 
                 Select::make('payment_type')
                     ->label('Payment type')
-                    ->options(PaymentType::class)
+                    ->options(self::getEnumOptions(PaymentType::class))
                     ->native(false)
                     ->required(),
 
@@ -176,5 +177,20 @@ class BillForm
             ->searchable()
             ->native(false)
             ->required();
+    }
+
+    /**
+     * Get enum options as key-value pairs for select fields.
+     *
+     * @param  class-string<UnitEnum>  $enumClass
+     * @return array<string, string>
+     */
+    private static function getEnumOptions(string $enumClass): array
+    {
+        return collect($enumClass::cases())
+            ->mapWithKeys(fn (UnitEnum $enum) => [
+                $enum->value => $enum->label(),
+            ])
+            ->toArray();
     }
 }
