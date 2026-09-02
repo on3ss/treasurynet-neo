@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\ReceiptSchemeObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -36,4 +37,14 @@ class ReceiptScheme extends Model
     protected $casts = [
         //
     ];
+
+    /**
+     * Accessors & Mutators
+     */
+    protected function displayName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $attributes['code'].' - '.$attributes['description']
+        );
+    }
 }

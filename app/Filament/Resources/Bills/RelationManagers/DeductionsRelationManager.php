@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources\Bills\RelationManagers;
 
+use App\Filament\Columns\MoneyColumn;
+use App\Filament\Entry\MoneyEntry;
+use App\Filament\Forms\Components\MoneyInput;
+use App\Filament\Forms\Components\RelationshipSelect;
 use App\Models\Deduction;
-use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
@@ -16,8 +17,6 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -35,10 +34,9 @@ class DeductionsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Select::make('receipt_scheme_id')
-                    ->relationship('receiptScheme', 'id')
+                RelationshipSelect::makeRelationship(name: 'receipt_scheme', label: 'Receipt Scheme', relationship: 'receiptScheme')
                     ->required(),
-                TextInput::make('amount')
+                MoneyInput::make('amount')
                     ->required()
                     ->numeric(),
             ]);
@@ -48,10 +46,9 @@ class DeductionsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextEntry::make('receiptScheme.id')
+                TextEntry::make('receiptScheme.display_name')
                     ->label('Receipt scheme'),
-                TextEntry::make('amount')
-                    ->numeric(),
+                MoneyEntry::make('amount'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),
@@ -69,10 +66,9 @@ class DeductionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('receiptScheme.description')
             ->columns([
-                TextColumn::make('receiptScheme.id')
+                TextColumn::make('receiptScheme.display_name')
                     ->searchable(),
-                TextColumn::make('amount')
-                    ->numeric()
+                MoneyColumn::make('amount')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -91,13 +87,10 @@ class DeductionsRelationManager extends RelationManager
                 TrashedFilter::make(),
             ])
             ->headerActions([
-                CreateAction::make(),
-                AssociateAction::make(),
             ])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                DissociateAction::make(),
                 DeleteAction::make(),
                 ForceDeleteAction::make(),
                 RestoreAction::make(),

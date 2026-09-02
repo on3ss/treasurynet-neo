@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Bills\RelationManagers;
 
 use App\Filament\Columns\MoneyColumn;
+use App\Filament\Forms\Components\MoneyInput;
+use App\Filament\Forms\Components\RelationshipSelect;
 use App\Models\Gross;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
@@ -17,8 +19,6 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -36,10 +36,9 @@ class GrossesRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Select::make('sub_detail_head_id')
-                    ->relationship('subDetailHead', 'id')
+                RelationshipSelect::makeRelationship(name: 'sub_detail_head', label: 'Sub-Detail Head', relationship: 'subDetailHead')
                     ->required(),
-                TextInput::make('amount')
+                MoneyInput::make('amount')
                     ->required()
                     ->numeric(),
             ]);
@@ -49,7 +48,7 @@ class GrossesRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextEntry::make('subDetailHead.id')
+                TextEntry::make('subDetailHead.display_name')
                     ->label('Sub detail head'),
                 TextEntry::make('amount')
                     ->numeric(),
@@ -70,7 +69,7 @@ class GrossesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('subDetailHead.description')
             ->columns([
-                TextColumn::make('subDetailHead.id')
+                TextColumn::make('subDetailHead.display_name')
                     ->searchable(),
                 MoneyColumn::make('amount')
                     ->sortable(),

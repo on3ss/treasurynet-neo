@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Bills\Schemas;
 use App\Enums\BillCategory;
 use App\Enums\BillSource;
 use App\Enums\PaymentType;
+use App\Filament\Forms\Components\RelationshipSelect;
 use App\Models\BillType;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -99,25 +100,25 @@ class BillForm
                 'sm' => 2,
             ])
             ->schema([
-                self::relationshipSelect(
+                RelationshipSelect::makeRelationship(
                     name: 'treasury_id',
                     label: 'Treasury',
                     relationship: 'treasury',
                 ),
 
-                self::relationshipSelect(
+                RelationshipSelect::makeRelationship(
                     name: 'ddo_id',
                     label: 'DDO',
                     relationship: 'ddo',
                 ),
 
-                self::relationshipSelect(
+                RelationshipSelect::makeRelationship(
                     name: 'detail_head_id',
                     label: 'Detail head',
                     relationship: 'detailHead',
                 ),
 
-                self::relationshipSelect(
+                RelationshipSelect::makeRelationship(
                     name: 'payment_scheme_id',
                     label: 'Payment scheme',
                     relationship: 'paymentScheme',
@@ -157,26 +158,6 @@ class BillForm
                     ->onColor('danger')
                     ->offColor('gray'),
             ]);
-    }
-
-    /**
-     * Create a searchable relationship select using the model's
-     * display_name attribute.
-     */
-    private static function relationshipSelect(
-        string $name,
-        string $label,
-        string $relationship
-    ): Select {
-        return Select::make($name)
-            ->label($label)
-            ->relationship($relationship, 'id')
-            ->getOptionLabelFromRecordUsing(
-                fn ($record): string => $record->display_name
-            )
-            ->searchable()
-            ->native(false)
-            ->required();
     }
 
     /**
