@@ -34,7 +34,11 @@ class DeductionsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                RelationshipSelect::makeRelationship(name: 'receipt_scheme', label: 'Receipt Scheme', relationship: 'receiptScheme')
+                RelationshipSelect::makeRelationship(
+                    name: 'receipt_scheme',
+                    label: 'Receipt Scheme',
+                    relationship: 'receiptScheme'
+                )
                     ->required(),
                 MoneyInput::make('amount')
                     ->required()
