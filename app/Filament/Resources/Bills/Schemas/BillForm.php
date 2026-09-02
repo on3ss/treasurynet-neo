@@ -6,10 +6,6 @@ use App\Enums\BillCategory;
 use App\Enums\BillSource;
 use App\Enums\PaymentType;
 use App\Models\BillType;
-use App\Models\Ddo;
-use App\Models\DetailHead;
-use App\Models\PaymentScheme;
-use App\Models\Treasury;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -22,23 +18,20 @@ class BillForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Grid::make()
-                    ->columnSpanFull()
-                    ->columns([
-                        'xs' => 1,
-                        '2xl' => 2,
-                    ])
-                    ->schema([
-                        self::billInformation(),
+        return $schema->components([
+            Grid::make([
+                'default' => 1,
+                'lg' => 2,
+            ])
+                ->columnSpanFull()
+                ->schema([
+                    self::billInformation(),
+                    self::administrativeInformation(),
 
-                        self::administrativeInformation(),
-
-                        self::financialInformation()
-                            ->columnSpanFull(),
-                    ]),
-            ]);
+                    self::financialInformation()
+                        ->columnSpanFull(),
+                ]),
+        ]);
     }
 
     private static function billInformation(): Section
@@ -47,7 +40,7 @@ class BillForm
             ->icon('heroicon-o-document-text')
             ->columns([
                 'default' => 1,
-                'md' => 2,
+                'sm' => 2,
                 'xl' => 3,
             ])
             ->schema([
@@ -69,7 +62,7 @@ class BillForm
 
                 Select::make('bill_type_id')
                     ->label('Bill type')
-                    ->relationship('billType', 'description')
+                    ->relationship('billType', 'id')
                     ->getOptionLabelFromRecordUsing(
                         fn (BillType $record): string => $record->display_name
                     )
@@ -102,50 +95,32 @@ class BillForm
             ->icon('heroicon-o-building-office-2')
             ->columns([
                 'default' => 1,
-                'md' => 2,
-                'xl' => 2,
+                'sm' => 2,
             ])
             ->schema([
-                Select::make('treasury_id')
-                    ->label('Treasury')
-                    ->relationship('treasury', 'id')
-                    ->getOptionLabelFromRecordUsing(
-                        fn (Treasury $record): string => $record->display_name
-                    )
-                    ->searchable()
-                    ->native(false)
-                    ->required(),
+                self::relationshipSelect(
+                    name: 'treasury_id',
+                    label: 'Treasury',
+                    relationship: 'treasury',
+                ),
 
-                Select::make('ddo_id')
-                    ->label('DDO')
-                    ->relationship('ddo', 'id')
-                    ->getOptionLabelFromRecordUsing(
-                        fn (Ddo $record): string => $record->display_name
-                    )
-                    ->searchable()
-                    ->native(false)
-                    ->required(),
+                self::relationshipSelect(
+                    name: 'ddo_id',
+                    label: 'DDO',
+                    relationship: 'ddo',
+                ),
 
-                Select::make('detail_head_id')
-                    ->label('Detail head')
-                    ->relationship('detailHead', 'id')
-                    ->getOptionLabelFromRecordUsing(
-                        fn (DetailHead $record): string => $record->display_name
-                    )
-                    ->searchable()
-                    ->native(false)
-                    ->required(),
+                self::relationshipSelect(
+                    name: 'detail_head_id',
+                    label: 'Detail head',
+                    relationship: 'detailHead',
+                ),
 
-                Select::make('payment_scheme_id')
-                    ->label('Payment scheme')
-                    ->relationship('paymentScheme', 'id')
-                    ->getOptionLabelFromRecordUsing(
-                        fn (PaymentScheme $record): string => $record->display_name
-                    )
-                    ->searchable()
-                    ->native(false)
-                    ->required()
-                    ->columnSpanFull(),
+                self::relationshipSelect(
+                    name: 'payment_scheme_id',
+                    label: 'Payment scheme',
+                    relationship: 'paymentScheme',
+                )->columnSpanFull(),
             ]);
     }
 
@@ -155,19 +130,19 @@ class BillForm
             ->icon('heroicon-o-banknotes')
             ->columns([
                 'default' => 1,
-                'md' => 2,
+                'sm' => 2,
                 'xl' => 4,
             ])
             ->schema([
                 TextInput::make('gross_amount')
                     ->label('Gross amount')
-                    ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->required(),
 
                 TextInput::make('net_amount')
                     ->label('Net amount')
-                    ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->required(),
 
                 Select::make('payment_type')
                     ->label('Payment type')
@@ -177,8 +152,29 @@ class BillForm
 
                 Toggle::make('is_urgent')
                     ->label('Urgency')
+                    ->inline(false)
                     ->onColor('danger')
                     ->offColor('gray'),
             ]);
+    }
+
+    /**
+     * Create a searchable relationship select using the model's
+     * display_name attribute.
+     */
+    private static function relationshipSelect(
+        string $name,
+        string $label,
+        string $relationship
+    ): Select {
+        return Select::make($name)
+            ->label($label)
+            ->relationship($relationship, 'id')
+            ->getOptionLabelFromRecordUsing(
+                fn ($record): string => $record->display_name
+            )
+            ->searchable()
+            ->native(false)
+            ->required();
     }
 }
