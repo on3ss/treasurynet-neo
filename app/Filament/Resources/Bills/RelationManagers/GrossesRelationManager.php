@@ -6,9 +6,7 @@ use App\Filament\Columns\MoneyColumn;
 use App\Filament\Forms\Components\MoneyInput;
 use App\Filament\Forms\Components\RelationshipSelect;
 use App\Models\Gross;
-use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
@@ -90,8 +88,6 @@ class GrossesRelationManager extends RelationManager
                 TrashedFilter::make(),
             ])
             ->headerActions([
-                CreateAction::make(),
-                AssociateAction::make(),
             ])
             ->recordActions([
                 ViewAction::make(),

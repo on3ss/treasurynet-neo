@@ -11,6 +11,7 @@ use App\Filament\Resources\Bills\Schemas\BillInfolist;
 use App\Filament\Resources\Bills\Tables\BillsTable;
 use App\Models\Bill;
 use BackedEnum;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -48,8 +49,10 @@ class BillResource extends Resource
     {
         return [
             RelationManagers\PayeesRelationManager::class,
-            RelationManagers\GrossesRelationManager::class,
-            RelationManagers\DeductionsRelationManager::class,
+            RelationGroup::make('Grosses & Deductions', [
+                RelationManagers\GrossesRelationManager::class,
+                RelationManagers\DeductionsRelationManager::class,
+            ]),
         ];
     }
 
