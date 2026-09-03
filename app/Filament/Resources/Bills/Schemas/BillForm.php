@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Bills\Schemas;
 use App\Enums\BillCategory;
 use App\Enums\BillSource;
 use App\Enums\PaymentType;
+use App\Filament\Forms\Components\MoneyInput;
 use App\Filament\Forms\Components\RelationshipSelect;
 use App\Models\BillType;
 use Filament\Forms\Components\DateTimePicker;
@@ -54,7 +55,9 @@ class BillForm
 
                 DateTimePicker::make('bill_date')
                     ->label('Bill date')
-                    ->required(),
+                    ->required()
+                    ->native(false)
+                    ->columnSpan(2),
 
                 Select::make('form_id')
                     ->label('Form')
@@ -66,7 +69,7 @@ class BillForm
                     ->label('Bill type')
                     ->relationship('billType', 'id')
                     ->getOptionLabelFromRecordUsing(
-                        fn (BillType $record): string => $record->display_name
+                        fn(BillType $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
@@ -136,14 +139,12 @@ class BillForm
                 'xl' => 4,
             ])
             ->schema([
-                TextInput::make('gross_amount')
+                MoneyInput::make('gross_amount')
                     ->label('Gross amount')
-                    ->numeric()
                     ->required(),
 
-                TextInput::make('net_amount')
+                MoneyInput::make('net_amount')
                     ->label('Net amount')
-                    ->numeric()
                     ->required(),
 
                 Select::make('payment_type')
@@ -169,7 +170,7 @@ class BillForm
     private static function getEnumOptions(string $enumClass): array
     {
         return collect($enumClass::cases())
-            ->mapWithKeys(fn (UnitEnum $enum) => [
+            ->mapWithKeys(fn(UnitEnum $enum) => [
                 $enum->value => $enum->label(),
             ])
             ->toArray();
