@@ -69,7 +69,7 @@ class BillForm
                     ->label('Bill type')
                     ->relationship('billType', 'id')
                     ->getOptionLabelFromRecordUsing(
-                        fn(BillType $record): string => $record->display_name
+                        fn (BillType $record): string => $record->display_name
                     )
                     ->searchable()
                     ->native(false)
@@ -170,7 +170,7 @@ class BillForm
     private static function getEnumOptions(string $enumClass): array
     {
         return collect($enumClass::cases())
-            ->mapWithKeys(fn(UnitEnum $enum) => [
+            ->mapWithKeys(fn (UnitEnum $enum) => [
                 $enum->value => $enum->label(),
             ])
             ->toArray();

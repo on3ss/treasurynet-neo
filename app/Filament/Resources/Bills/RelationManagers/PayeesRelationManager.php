@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Bills\RelationManagers;
 
 use App\Filament\Columns\MoneyColumn;
+use App\Filament\Summarizers\MoneySum;
 use App\Models\Payee;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -83,7 +84,8 @@ class PayeesRelationManager extends RelationManager
                     ->sortable(),
 
                 MoneyColumn::make('amount')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(MoneySum::make()),
 
                 TextColumn::make('ifsc')
                     ->label('IFSC')

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Bills\RelationManagers;
 use App\Filament\Columns\MoneyColumn;
 use App\Filament\Forms\Components\MoneyInput;
 use App\Filament\Forms\Components\RelationshipSelect;
+use App\Filament\Summarizers\MoneySum;
 use App\Models\Gross;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -68,6 +69,7 @@ class GrossesRelationManager extends RelationManager
                 TextColumn::make('subDetailHead.display_name')
                     ->searchable(),
                 MoneyColumn::make('amount')
+                    ->summarize(MoneySum::make())
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
