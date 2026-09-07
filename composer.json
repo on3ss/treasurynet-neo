@@ -12,6 +12,7 @@
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "njxqlus/filament-relation-manager-component": "^2.2",
         "spatie/laravel-medialibrary": "^11.23"
     },
     "require-dev": {

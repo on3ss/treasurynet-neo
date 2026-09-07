@@ -3,27 +3,39 @@
 namespace App\Filament\Resources\Bills\Schemas;
 
 use App\Filament\Entry\MoneyEntry;
+use App\Filament\Resources\Bills\RelationManagers\DeductionsRelationManager;
+use App\Filament\Resources\Bills\RelationManagers\GrossesRelationManager;
+use App\Filament\Resources\Bills\RelationManagers\PayeesRelationManager;
 use App\Models\Bill;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Njxqlus\Filament\Components\Forms\RelationManager;
 
 class BillInfolist
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Grid::make([
-                'default' => 1,
-                'lg' => 2,
-            ])
-                ->columnSpanFull()
-                ->schema([
-                    self::billInformationSection(),
-                    self::administrativeSection(),
-
-                    self::financialSection(),
+            Tabs::make()
+                ->tabs([
+                    Tab::make('Primary Details')
+                        ->schema([
+                            self::billInformationSection(),
+                            self::administrativeSection(),
+                            self::financialSection(),
+                        ]),
+                    Tab::make('Payees')
+                        ->schema([
+                            RelationManager::make()->manager(PayeesRelationManager::class)->lazy(false),
+                        ]),
+                    Tab::make('Grosses and Deductions')
+                        ->schema([
+                            RelationManager::make()->manager(GrossesRelationManager::class)->lazy(false),
+                            RelationManager::make()->manager(DeductionsRelationManager::class)->lazy(false),
+                        ]),
                 ]),
         ]);
     }
