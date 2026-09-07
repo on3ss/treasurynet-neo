@@ -20,6 +20,7 @@ use App\Models\ReceiptScheme;
 use App\Models\SubDetailHead;
 use App\Models\Treasury;
 use App\Services\BillNoSequenceService;
+use App\Services\PdfGeneratorService;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
@@ -31,9 +32,12 @@ class BillSeeder extends Seeder
 {
     protected BillNoSequenceService $billNoSequenceService;
 
-    public function __construct(BillNoSequenceService $billNoSequenceService)
+    protected PdfGeneratorService $pdfGeneratorService;
+
+    public function __construct(BillNoSequenceService $billNoSequenceService, PdfGeneratorService $pdfGeneratorService)
     {
         $this->billNoSequenceService = $billNoSequenceService;
+        $this->pdfGeneratorService = $pdfGeneratorService;
     }
 
     /**
@@ -280,7 +284,7 @@ class BillSeeder extends Seeder
         // Determine bill date within financial year
         $billDate = $this->getRandomDateInFinancialYear($financialYear);
 
-        return Bill::create([
+        $bill = Bill::create([
             'financial_year_id' => $financialYear->id,
             'treasury_id' => $treasury->id,
             'ddo_id' => $ddo->id,
@@ -298,6 +302,10 @@ class BillSeeder extends Seeder
             'is_urgent' => rand(0, 100) < 20,
             'payment_type' => $this->getRandomPaymentType(),
         ]);
+
+        $this->attachPdfDocumentsToBill($bill, $financialYear, $treasury, $ddo, $paymentScheme, $detailHead, $billType, $form);
+
+        return $bill;
     }
 
     /**
@@ -536,5 +544,251 @@ class BillSeeder extends Seeder
         $paymentTypes = PaymentType::cases();
 
         return $paymentTypes[array_rand($paymentTypes)]->value;
+    }
+
+    /**
+     * Attach PDF documents to a bill.
+     */
+    private function attachPdfDocumentsToBill(
+        Bill $bill,
+        FinancialYear $financialYear,
+        Treasury $treasury,
+        Ddo $ddo,
+        PaymentScheme $paymentScheme,
+        DetailHead $detailHead,
+        BillType $billType,
+        Form $form
+    ): void {
+        try {
+            $this->command->line("  📄 Generating PDFs for bill {$bill->formatted_bill_number}...");
+
+            // Prepare common data for PDFs
+            $pdfData = $this->preparePdfData($bill, $financialYear, $treasury, $ddo, $paymentScheme, $detailHead, $billType, $form);
+
+            // 1. Main Document (Mandatory - one per bill)
+            $this->attachMainDocument($bill, $pdfData);
+            $this->command->line('    ✓ Main document attached');
+
+            // 2. Sanctions (Mandatory - one or more)
+            $sanctionCount = $this->attachSanctions($bill, $pdfData);
+            $this->command->line("    ✓ {$sanctionCount} sanction(s) attached");
+
+            // 3. Vouchers (Optional - 0 or 1 or multiple)
+            $voucherCount = $this->attachVouchers($bill, $pdfData);
+            if ($voucherCount > 0) {
+                $this->command->line("    ✓ {$voucherCount} voucher(s) attached");
+            } else {
+                $this->command->line('    ℹ No vouchers attached (bill too recent)');
+            }
+
+        } catch (\Exception $e) {
+            Log::error("Failed to attach PDFs to bill {$bill->bill_number}: ".$e->getMessage());
+            $this->command->warn("  ⚠ Failed to attach PDFs to bill {$bill->formatted_bill_number}: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Prepare data for PDF generation.
+     */
+    private function preparePdfData(
+        Bill $bill,
+        FinancialYear $financialYear,
+        Treasury $treasury,
+        Ddo $ddo,
+        PaymentScheme $paymentScheme,
+        DetailHead $detailHead,
+        BillType $billType,
+        Form $form
+    ): array {
+        // Load relationships for PDF data
+        $bill->load(['grosses.subDetailHead', 'deductions.receiptScheme', 'payees']);
+
+        $grossEntries = $bill->grosses->map(function ($gross) {
+            return [
+                'sub_detail_head_name' => $gross->subDetailHead->name ?? 'N/A',
+                'amount' => $gross->amount,
+            ];
+        })->toArray();
+
+        $deductions = $bill->deductions->map(function ($deduction) {
+            return [
+                'receipt_scheme_name' => $deduction->receiptScheme->name ?? 'N/A',
+                'amount' => $deduction->amount,
+            ];
+        })->toArray();
+
+        $payees = $bill->payees->map(function ($payee) {
+            return [
+                'reg_code' => $payee->reg_code,
+                'name' => $payee->name,
+                'amount' => $payee->amount,
+                'ifsc' => $payee->ifsc,
+                'account_no' => $payee->account_no,
+            ];
+        })->toArray();
+
+        $totalDeductions = $bill->deductions()->sum('amount');
+
+        return [
+            'bill_number' => $bill->formatted_bill_number,
+            'bill_date' => $bill->bill_date->format('d-m-Y'),
+            'financial_year' => $financialYear->name ?? $financialYear->start_date->format('Y').'-'.$financialYear->end_date->format('Y'),
+            'treasury_name' => $treasury->name,
+            'treasury_code' => $treasury->code ?? $treasury->name,
+            'ddo_name' => $ddo->name,
+            'ddo_code' => $ddo->code ?? $ddo->name,
+            'payment_scheme_name' => $paymentScheme->name,
+            'detail_head_name' => $detailHead->name,
+            'bill_type_name' => $billType->name,
+            'form_name' => $form->name,
+            'source' => $bill->source->label(),
+            'category' => $bill->category->label(),
+            'payment_type' => $bill->payment_type->label(),
+            'is_urgent' => $bill->is_urgent,
+            'net_amount' => $bill->net_amount,
+            'gross_amount' => $bill->gross_amount,
+            'gross_entries' => $grossEntries,
+            'deductions' => $deductions,
+            'payees' => $payees,
+            'total_deductions' => $totalDeductions,
+        ];
+    }
+
+    /**
+     * Attach main document to bill (mandatory).
+     */
+    private function attachMainDocument(Bill $bill, array $pdfData): void
+    {
+        $filename = sprintf(
+            'MAIN_%s_%s.pdf',
+            $bill->formatted_bill_number,
+            Str::random(8)
+        );
+
+        $pdfPath = $this->pdfGeneratorService->generatePdf('pdf.bill-main', $pdfData, $filename);
+
+        try {
+            $bill->addMedia($pdfPath)
+                ->usingName("Main Document - {$bill->formatted_bill_number}")
+                ->usingFileName($filename)
+                ->toMediaCollection('main-document');
+        } finally {
+            $this->pdfGeneratorService->cleanupTempFile($pdfPath);
+        }
+    }
+
+    /**
+     * Attach sanctions to bill (mandatory - one or more).
+     */
+    private function attachSanctions(Bill $bill, array $pdfData): int
+    {
+        $sanctionCount = rand(1, 3); // Generate 1-3 sanctions
+        $createdCount = 0;
+
+        for ($i = 1; $i <= $sanctionCount; $i++) {
+            $sanctionData = array_merge($pdfData, [
+                'sanction_order_no' => 'SANC/'.date('Y').'/'.str_pad($bill->bill_number, 4, '0', STR_PAD_LEFT).'/'.$i,
+                'sanction_date' => $bill->bill_date->copy()->subDays(rand(1, 30))->format('d-m-Y'),
+                'sanctioned_amount' => round($bill->gross_amount / $sanctionCount, 2),
+                'purpose' => $this->getRandomPurpose(),
+                'state_name' => config('app.state_name', 'State'),
+            ]);
+
+            $filename = sprintf(
+                'SANCTION_%s_%d_%s.pdf',
+                $bill->formatted_bill_number,
+                $i,
+                Str::random(8)
+            );
+
+            $pdfPath = $this->pdfGeneratorService->generatePdf('pdf.sanction', $sanctionData, $filename);
+
+            try {
+                $bill->addMedia($pdfPath)
+                    ->usingName("Sanction {$i} - {$bill->formatted_bill_number}")
+                    ->usingFileName($filename)
+                    ->toMediaCollection('sanctions');
+                $createdCount++;
+            } finally {
+                $this->pdfGeneratorService->cleanupTempFile($pdfPath);
+            }
+        }
+
+        return $createdCount;
+    }
+
+    /**
+     * Attach vouchers to bill (optional - 0 or 1 or multiple).
+     */
+    private function attachVouchers(Bill $bill, array $pdfData): int
+    {
+        // Only generate vouchers for processed bills (older than 3 days)
+        if ($bill->bill_date->gt(now()->subDays(3))) {
+            return 0;
+        }
+
+        $voucherCount = rand(0, 3); // Generate 0-3 vouchers
+        $createdCount = 0;
+
+        for ($i = 1; $i <= $voucherCount; $i++) {
+            $voucherData = array_merge($pdfData, [
+                'voucher_no' => 'VCH/'.date('Y').'/'.str_pad($bill->bill_number, 4, '0', STR_PAD_LEFT).'/'.$i,
+                'voucher_date' => $bill->bill_date->copy()->addDays(rand(1, 5))->format('d-m-Y'),
+                'amount_in_words' => $this->numberToWords($bill->net_amount),
+            ]);
+
+            $filename = sprintf(
+                'VOUCHER_%s_%d_%s.pdf',
+                $bill->formatted_bill_number,
+                $i,
+                Str::random(8)
+            );
+
+            $pdfPath = $this->pdfGeneratorService->generatePdf('pdf.voucher', $voucherData, $filename);
+
+            try {
+                $bill->addMedia($pdfPath)
+                    ->usingName("Voucher {$i} - {$bill->formatted_bill_number}")
+                    ->usingFileName($filename)
+                    ->toMediaCollection('vouchers');
+                $createdCount++;
+            } finally {
+                $this->pdfGeneratorService->cleanupTempFile($pdfPath);
+            }
+        }
+
+        return $createdCount;
+    }
+
+    /**
+     * Get random purpose for sanction.
+     */
+    private function getRandomPurpose(): string
+    {
+        $purposes = [
+            'Payment of salaries and allowances',
+            'Office expenses and maintenance',
+            'Purchase of equipment and materials',
+            'Construction and renovation works',
+            'Training and development programs',
+            'Travel and transportation expenses',
+            'Medical reimbursement',
+            'Pension disbursement',
+            'Contractual services',
+            'Emergency expenditure',
+        ];
+
+        return $purposes[array_rand($purposes)];
+    }
+
+    /**
+     * Convert number to words (simplified version).
+     */
+    private function numberToWords(float $number): string
+    {
+        $formatter = new \NumberFormatter('en_IN', \NumberFormatter::SPELLOUT);
+        $words = $formatter->format($number);
+
+        return ucwords($words).' Rupees Only';
     }
 }

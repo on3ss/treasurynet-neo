@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Bill extends Model
+class Bill extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use InteractsWithMedia, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -136,7 +138,7 @@ class Bill extends Model
     protected function displayName(): Attribute
     {
         return Attribute::make(
-            get: fn(): string => sprintf(
+            get: fn (): string => sprintf(
                 '%s - %s/%s/%s',
                 $this->source->label(),
                 $this->financialYear?->name ?? '-',
@@ -144,5 +146,12 @@ class Bill extends Model
                 $this->bill_number ?? '-'
             ),
         );
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('main-document');
+        $this->addMediaCollection('sanctions');
+        $this->addMediaCollection('vouchers');
     }
 }
