@@ -48,7 +48,7 @@ class BillInfolist
 
                     Section::make('Documents')
                         ->icon('heroicon-o-document')
-                        ->visible(fn(Bill $bill) => $bill->getMedia('main-document')->isNotEmpty()
+                        ->visible(fn (Bill $bill) => $bill->getMedia('main-document')->isNotEmpty()
                             || $bill->getMedia('sanctions')->isNotEmpty()
                             || $bill->getMedia('vouchers')->isNotEmpty())
                         ->schema([
@@ -85,7 +85,7 @@ class BillInfolist
                                     return ['documentCollections' => $documentCollections];
                                 })
                                 ->columnSpanFull(),
-                        ])
+                        ]),
                 ]),
         ]);
     }
@@ -121,13 +121,13 @@ class BillInfolist
                 self::enumEntry(
                     name: 'source',
                     label: 'Source',
-                    resolver: fn(Bill $bill) => $bill->source,
+                    resolver: fn (Bill $bill) => $bill->source,
                 ),
 
                 self::enumEntry(
                     name: 'category',
                     label: 'Category',
-                    resolver: fn(Bill $bill) => $bill->category,
+                    resolver: fn (Bill $bill) => $bill->category,
                 ),
             ]);
     }
@@ -181,19 +181,19 @@ class BillInfolist
                 self::enumEntry(
                     name: 'payment_type',
                     label: 'Payment type',
-                    resolver: fn(Bill $bill) => $bill->payment_type,
+                    resolver: fn (Bill $bill) => $bill->payment_type,
                 ),
 
                 TextEntry::make('is_urgent')
                     ->label('Urgency')
                     ->badge()
                     ->formatStateUsing(
-                        fn(bool $state): string => $state
+                        fn (bool $state): string => $state
                         ? 'Urgent'
                         : 'Normal'
                     )
                     ->color(
-                        fn(bool $state): string => $state
+                        fn (bool $state): string => $state
                         ? 'danger'
                         : 'gray'
                     ),
@@ -210,10 +210,10 @@ class BillInfolist
             ->placeholder('-')
             ->badge()
             ->formatStateUsing(
-                fn(Bill $bill) => $resolver($bill)?->label() ?? '-'
+                fn (Bill $bill) => $resolver($bill)?->label() ?? '-'
             )
             ->color(
-                fn(Bill $bill) => $resolver($bill)?->color() ?? 'gray'
+                fn (Bill $bill) => $resolver($bill)?->color() ?? 'gray'
             );
     }
 }
