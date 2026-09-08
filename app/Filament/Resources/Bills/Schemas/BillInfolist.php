@@ -46,22 +46,46 @@ class BillInfolist
                                 ]),
                         ]),
 
-                    // Main document section using a custom Blade view
-                    Section::make('Main Document')
+                    Section::make('Documents')
                         ->icon('heroicon-o-document')
-                        ->visible(fn(Bill $bill) => $bill->hasMedia('main-document'))
+                        ->visible(fn(Bill $bill) => $bill->getMedia('main-document')->isNotEmpty()
+                            || $bill->getMedia('sanctions')->isNotEmpty()
+                            || $bill->getMedia('vouchers')->isNotEmpty())
                         ->schema([
-                            ViewEntry::make('main_document')
+                            ViewEntry::make('documents')
                                 ->hiddenLabel()
-                                ->view('components.pdf-viewer')
+                                ->view('components.pdf-viewer-tabs')
                                 ->viewData(function (Bill $bill) {
-                                    $media = $bill->getFirstMedia('main-document');
-                                    return [
-                                        'url' => $media?->getTemporaryUrl(now()->addMinutes(30)),
+                                    $collections = [
+                                        'main-document' => 'Main Document',
+                                        'sanctions' => 'Sanctions',
+                                        'vouchers' => 'Vouchers',
                                     ];
+
+                                    $documentCollections = [];
+                                    foreach ($collections as $collection => $label) {
+                                        $mediaItems = $bill->getMedia($collection);
+                                        if ($mediaItems->isEmpty()) {
+                                            continue;
+                                        }
+
+                                        $files = $mediaItems->map(function ($media) {
+                                            return [
+                                                'label' => $media->name ?: $media->file_name,
+                                                'url' => $media->getTemporaryUrl(now()->addMinutes(30)),
+                                            ];
+                                        })->all();
+
+                                        $documentCollections[] = [
+                                            'label' => $label,
+                                            'files' => $files,
+                                        ];
+                                    }
+
+                                    return ['documentCollections' => $documentCollections];
                                 })
                                 ->columnSpanFull(),
-                        ]),
+                        ])
                 ]),
         ]);
     }
